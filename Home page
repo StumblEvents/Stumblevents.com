@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stumbl – Discover Events Around You</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+  <!-- HERO / BANNER -->
+  <header class="hero">
+    <div class="hero-content">
+      <img src="assets/icon.png" alt="Stumbl Logo" class="logo"/>
+      <h1>Stumbl</h1>
+      <p>Find things to do. Right now. Right around you.</p>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <section class="feature">
+    <img src="assets/bg-home-dark.png" alt="Home Screen"/>
+    <div class="text">
+      <h2>Discover What's Happening</h2>
+      <p>
+        The home screen shows you curated events happening near you.
+        Whether it's live music, food festivals, or pop-up events,
+        Stumbl makes it effortless to find something exciting.
+      </p>
+    </div>
+  </section>
+
+  <!-- MAP -->
+  <section class="feature reverse">
+    <img src="assets/bg-home-light.png" alt="Map Screen"/>
+    <div class="text">
+      <h2>Explore the Map</h2>
+      <p>
+        View events visually on a map and explore what's nearby in real time.
+        Just tap a pin to instantly see what's going on around you.
+      </p>
+    </div>
+  </section>
+
+  <!-- CREATE -->
+  <section class="feature">
+    <img src="assets/bg-create-dark.png" alt="Create Event"/>
+    <div class="text">
+      <h2>Create Events</h2>
+      <p>
+        Hosting something? Post your own event in seconds and let people discover it.
+        Stumbl makes sharing experiences simple and fast.
+      </p>
+    </div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="feature reverse">
+    <img src="assets/bg-calendar-dark.png" alt="Calendar"/>
+    <div class="text">
+      <h2>Plan Ahead</h2>
+      <p>
+        Keep track of upcoming events with your personal calendar.
+        Never miss something you’re excited about again.
+      </p>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section class="feature">
+    <img src="assets/bg-profile-dark.png" alt="Profile"/>
+    <div class="text">
+      <h2>Your Activity</h2>
+      <p>
+        Manage your events, saved activities, and preferences all in one place.
+        Your personalized experience starts here.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Stumbl. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
