@@ -43,15 +43,33 @@ renderCategory("Local Food");
 function handleSignup(formId, noteId) {
   const form = document.querySelector(`#${formId}`);
   const note = document.querySelector(`#${noteId}`);
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const email = form.querySelector("input").value.trim();
+    const email = form.querySelector('input[type="email"]').value.trim();
     if (!email) return;
-    const saved = JSON.parse(localStorage.getItem("stumblWaitlist") || "[]");
-    if (!saved.includes(email)) saved.push(email);
-    localStorage.setItem("stumblWaitlist", JSON.stringify(saved));
-    note.textContent = "You're on the list. We'll let you know when Stumbl is ready.";
-    form.reset();
+
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    note.classList.remove("is-error");
+    note.textContent = "Joining...";
+
+    try {
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) throw new Error("Signup failed");
+
+      note.textContent = "You're on the list. We'll let you know when Stumbl is ready.";
+      form.reset();
+    } catch {
+      note.classList.add("is-error");
+      note.textContent = "We couldn't add you just yet. Please try again.";
+    } finally {
+      button.disabled = false;
+    }
   });
 }
 
