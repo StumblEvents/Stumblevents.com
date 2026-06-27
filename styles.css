@@ -206,6 +206,14 @@ button {
   margin: 10px 2px 0;
 }
 
+.form-note:empty {
+  display: none;
+}
+
+.form-note.is-error {
+  color: #a23b32;
+}
+
 .hero-visual {
   min-height: 620px;
   position: relative;
@@ -381,6 +389,9 @@ button {
 
 .page-copy {
   max-width: 620px;
+  width: 100%;
+  justify-self: center;
+  text-align: center;
 }
 
 .page-copy h3 {
