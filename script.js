@@ -285,19 +285,19 @@ function hasChildren(value) {
   return false;
 }
 
-function createCategoryButton(label, path, value) {
+function getLevelLabel() {
+  if (currentPath.length === 1) return "Subcategory";
+  if (currentPath.length === 2) return "Next level";
+  return "More options";
+}
+
+function createLevelButton(label, path, value) {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "category-option";
+  button.className = "category-level-button";
   button.textContent = label;
 
   const buttonPath = [...path, label];
-  const isSelected =
-    selectedPath && selectedPath.join(" > ") === buttonPath.join(" > ");
-
-  if (isSelected) {
-    button.classList.add("selected");
-  }
 
   if (hasChildren(value)) {
     button.classList.add("has-children");
@@ -308,42 +308,48 @@ function createCategoryButton(label, path, value) {
       renderCurrentPath();
     });
   } else {
-    button.classList.add("final-option");
-
     button.addEventListener("click", () => {
       selectedPath = buttonPath;
       renderCurrentPath();
     });
   }
 
+  if (selectedPath && selectedPath.join(" > ") === buttonPath.join(" > ")) {
+    button.classList.add("active");
+  }
+
   return button;
 }
 
-function createBreadcrumb() {
-  const breadcrumb = document.createElement("div");
-  breadcrumb.className = "category-breadcrumb";
+function createBackButton() {
+  if (currentPath.length <= 1) return null;
 
-  currentPath.forEach((part, index) => {
-    const crumb = document.createElement("button");
-    crumb.type = "button";
-    crumb.textContent = part;
+  const backButton = document.createElement("button");
+  backButton.type = "button";
+  backButton.className = "category-back-button";
+  backButton.textContent = `← Back to ${currentPath[currentPath.length - 2]}`;
 
-    crumb.addEventListener("click", () => {
-      currentPath = currentPath.slice(0, index + 1);
-      selectedPath = null;
-      renderCurrentPath();
-    });
-
-    breadcrumb.appendChild(crumb);
-
-    if (index < currentPath.length - 1) {
-      const divider = document.createElement("span");
-      divider.textContent = "›";
-      breadcrumb.appendChild(divider);
-    }
+  backButton.addEventListener("click", () => {
+    currentPath = currentPath.slice(0, -1);
+    selectedPath = null;
+    renderCurrentPath();
   });
 
-  return breadcrumb;
+  return backButton;
+}
+
+function createSectionLabel(text) {
+  const label = document.createElement("p");
+  label.className = "category-level-label";
+  label.textContent = text;
+  return label;
+}
+
+function createSelectedPathText() {
+  const selected = document.createElement("p");
+  selected.className = "selected-category-note";
+  selected.textContent = `Selected: ${selectedPath.join(" > ")}`;
+  return selected;
 }
 
 function renderCurrentPath() {
@@ -354,30 +360,37 @@ function renderCurrentPath() {
   title.textContent = currentName;
   list.innerHTML = "";
 
-  list.appendChild(createBreadcrumb());
+  const backButton = createBackButton();
+  if (backButton) {
+    list.appendChild(backButton);
+  }
+
+  list.appendChild(createSectionLabel("Category"));
+
+  const currentCategoryBox = document.createElement("div");
+  currentCategoryBox.className = "current-category-box";
+  currentCategoryBox.textContent = currentPath.join("  ›  ");
+  list.appendChild(currentCategoryBox);
+
+  list.appendChild(createSectionLabel(getLevelLabel()));
 
   const optionsWrapper = document.createElement("div");
-  optionsWrapper.className = "category-options";
+  optionsWrapper.className = "category-level-options";
 
   if (Array.isArray(currentNode)) {
     currentNode.forEach((item) => {
-      optionsWrapper.appendChild(createCategoryButton(item, currentPath, null));
+      optionsWrapper.appendChild(createLevelButton(item, currentPath, null));
     });
   } else if (currentNode && typeof currentNode === "object") {
     Object.entries(currentNode).forEach(([name, value]) => {
-      optionsWrapper.appendChild(
-        createCategoryButton(name, currentPath, value)
-      );
+      optionsWrapper.appendChild(createLevelButton(name, currentPath, value));
     });
   }
 
   list.appendChild(optionsWrapper);
 
   if (selectedPath) {
-    const selectedNote = document.createElement("p");
-    selectedNote.className = "selected-category-note";
-    selectedNote.textContent = `Selected: ${selectedPath.join(" > ")}`;
-    list.appendChild(selectedNote);
+    list.appendChild(createSelectedPathText());
   }
 
   [...tabs.querySelectorAll("button")].forEach((button) => {
@@ -396,7 +409,9 @@ Object.keys(categories).forEach((name, index) => {
     renderCurrentPath();
   });
 
-  if (index === 0) button.classList.add("active");
+  if (index === 0) {
+    button.classList.add("active");
+  }
 
   tabs.appendChild(button);
 });
