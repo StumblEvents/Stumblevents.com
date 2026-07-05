@@ -269,14 +269,26 @@ const tabs = document.querySelector("#categoryTabs");
 const title = document.querySelector("#categoryTitle");
 const list = document.querySelector("#subcategoryList");
 
-let currentPath = ["Local Food"];
-let selectedPath = null;
+let selectedCategory = "Local Food";
+let selectedSubcategory = null;
+let selectedSubSubcategory = null;
 
-function getNodeFromPath(path) {
-  return path.reduce((node, key) => {
-    if (!node || Array.isArray(node)) return null;
-    return node[key];
-  }, categories);
+function getChildren(node) {
+  if (Array.isArray(node)) {
+    return node.map((item) => ({
+      name: item,
+      value: null
+    }));
+  }
+
+  if (node && typeof node === "object") {
+    return Object.entries(node).map(([name, value]) => ({
+      name,
+      value
+    }));
+  }
+
+  return [];
 }
 
 function hasChildren(value) {
@@ -285,138 +297,156 @@ function hasChildren(value) {
   return false;
 }
 
-function getLevelLabel() {
-  if (currentPath.length === 1) return "Subcategory";
-  if (currentPath.length === 2) return "Next level";
-  return "More options";
-}
-
-function createLevelButton(label, path, value) {
+function createTabButton(text, isActive, onClick) {
   const button = document.createElement("button");
   button.type = "button";
-  button.className = "category-level-button";
-  button.textContent = label;
+  button.textContent = text;
 
-  const buttonPath = [...path, label];
-
-  if (hasChildren(value)) {
-    button.classList.add("has-children");
-
-    button.addEventListener("click", () => {
-      currentPath = buttonPath;
-      selectedPath = null;
-      renderCurrentPath();
-    });
-  } else {
-    button.addEventListener("click", () => {
-      selectedPath = buttonPath;
-      renderCurrentPath();
-    });
-  }
-
-  if (selectedPath && selectedPath.join(" > ") === buttonPath.join(" > ")) {
+  if (isActive) {
     button.classList.add("active");
   }
+
+  button.addEventListener("click", onClick);
 
   return button;
 }
 
-function createBackButton() {
-  if (currentPath.length <= 1) return null;
+function createTabSection(labelText) {
+  const section = document.createElement("div");
+  section.className = "category-tab-section";
 
-  const backButton = document.createElement("button");
-  backButton.type = "button";
-  backButton.className = "category-back-button";
-  backButton.textContent = `← Back to ${currentPath[currentPath.length - 2]}`;
-
-  backButton.addEventListener("click", () => {
-    currentPath = currentPath.slice(0, -1);
-    selectedPath = null;
-    renderCurrentPath();
-  });
-
-  return backButton;
-}
-
-function createSectionLabel(text) {
   const label = document.createElement("p");
-  label.className = "category-level-label";
-  label.textContent = text;
-  return label;
+  label.className = "category-tab-label";
+  label.textContent = labelText;
+
+  const row = document.createElement("div");
+  row.className = "category-tab-row";
+
+  section.appendChild(label);
+  section.appendChild(row);
+
+  return { section, row };
 }
 
-function createSelectedPathText() {
-  const selected = document.createElement("p");
-  selected.className = "selected-category-note";
-  selected.textContent = `Selected: ${selectedPath.join(" > ")}`;
-  return selected;
+function renderMainCategories() {
+  tabs.innerHTML = "";
+
+  Object.keys(categories).forEach((categoryName) => {
+    const button = createTabButton(
+      categoryName,
+      categoryName === selectedCategory,
+      () => {
+        selectedCategory = categoryName;
+        selectedSubcategory = null;
+        selectedSubSubcategory = null;
+        renderCategories();
+      }
+    );
+
+    tabs.appendChild(button);
+  });
 }
 
-function renderCurrentPath() {
-  const currentCategory = currentPath[0];
-  const currentName = currentPath[currentPath.length - 1];
-  const currentNode = getNodeFromPath(currentPath);
+function renderCategories() {
+  renderMainCategories();
 
-  title.textContent = currentName;
+  title.textContent = selectedCategory;
   list.innerHTML = "";
 
-  const backButton = createBackButton();
-  if (backButton) {
-    list.appendChild(backButton);
-  }
+  const selectedCategoryData = categories[selectedCategory];
 
-  list.appendChild(createSectionLabel("Category"));
+  const subcategorySection = createTabSection("Subcategory");
+  const subcategories = getChildren(selectedCategoryData);
 
-  const currentCategoryBox = document.createElement("div");
-  currentCategoryBox.className = "current-category-box";
-  currentCategoryBox.textContent = currentPath.join("  ›  ");
-  list.appendChild(currentCategoryBox);
+  subcategories.forEach(({ name, value }) => {
+    const button = createTabButton(
+      name,
+      name === selectedSubcategory,
+      () => {
+        selectedSubcategory = name;
+        selectedSubSubcategory = null;
+        renderCategories();
+      }
+    );
 
-  list.appendChild(createSectionLabel(getLevelLabel()));
+    if (hasChildren(value)) {
+      button.classList.add("has-children");
+    }
 
-  const optionsWrapper = document.createElement("div");
-  optionsWrapper.className = "category-level-options";
-
-  if (Array.isArray(currentNode)) {
-    currentNode.forEach((item) => {
-      optionsWrapper.appendChild(createLevelButton(item, currentPath, null));
-    });
-  } else if (currentNode && typeof currentNode === "object") {
-    Object.entries(currentNode).forEach(([name, value]) => {
-      optionsWrapper.appendChild(createLevelButton(name, currentPath, value));
-    });
-  }
-
-  list.appendChild(optionsWrapper);
-
-  if (selectedPath) {
-    list.appendChild(createSelectedPathText());
-  }
-
-  [...tabs.querySelectorAll("button")].forEach((button) => {
-    button.classList.toggle("active", button.textContent === currentCategory);
+    subcategorySection.row.appendChild(button);
   });
+
+  list.appendChild(subcategorySection.section);
+
+  if (!selectedSubcategory && subcategories.length > 0) {
+    selectedSubcategory = subcategories[0].name;
+  }
+
+  const selectedSubcategoryData = Array.isArray(selectedCategoryData)
+    ? null
+    : selectedCategoryData[selectedSubcategory];
+
+  if (hasChildren(selectedSubcategoryData)) {
+    const nextLevelSection = createTabSection("Next Level");
+    const nextLevelItems = getChildren(selectedSubcategoryData);
+
+    nextLevelItems.forEach(({ name, value }) => {
+      const button = createTabButton(
+        name,
+        name === selectedSubSubcategory,
+        () => {
+          selectedSubSubcategory = name;
+          renderCategories();
+        }
+      );
+
+      if (hasChildren(value)) {
+        button.classList.add("has-children");
+      }
+
+      nextLevelSection.row.appendChild(button);
+    });
+
+    list.appendChild(nextLevelSection.section);
+
+    if (selectedSubSubcategory) {
+      const deeperData = selectedSubcategoryData[selectedSubSubcategory];
+
+      if (hasChildren(deeperData)) {
+        const deeperSection = createTabSection("More Options");
+        const deeperItems = getChildren(deeperData);
+
+        deeperItems.forEach(({ name }) => {
+          const button = createTabButton(name, false, () => {
+            selectedSubSubcategory = name;
+            renderCategories();
+          });
+
+          deeperSection.row.appendChild(button);
+        });
+
+        list.appendChild(deeperSection.section);
+      }
+    }
+  }
+
+  const selectedPath = [selectedCategory];
+
+  if (selectedSubcategory) {
+    selectedPath.push(selectedSubcategory);
+  }
+
+  if (selectedSubSubcategory) {
+    selectedPath.push(selectedSubSubcategory);
+  }
+
+  const pathNote = document.createElement("p");
+  pathNote.className = "selected-category-note";
+  pathNote.textContent = `Selected: ${selectedPath.join(" › ")}`;
+  list.appendChild(pathNote);
 }
 
-Object.keys(categories).forEach((name, index) => {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = name;
-
-  button.addEventListener("click", () => {
-    currentPath = [name];
-    selectedPath = null;
-    renderCurrentPath();
-  });
-
-  if (index === 0) {
-    button.classList.add("active");
-  }
-
-  tabs.appendChild(button);
-});
-
-renderCurrentPath();
+renderCategories();
 
 function handleSignup(formId, noteId) {
   const form = document.querySelector(`#${formId}`);
