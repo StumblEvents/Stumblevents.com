@@ -269,98 +269,18 @@ const tabs = document.querySelector("#categoryTabs");
 const title = document.querySelector("#categoryTitle");
 const list = document.querySelector("#subcategoryList");
 
-function createPill(text) {
-  const pill = document.createElement("span");
-  pill.textContent = text;
-  return pill;
-}
-
-function renderItems(items, container, depth = 0) {
-  if (Array.isArray(items)) {
-    items.forEach((item) => {
-      container.appendChild(createPill(item));
-    });
-    return;
-  }
-
-  Object.entries(items).forEach(([groupName, groupItems]) => {
-    const group = document.createElement("div");
-    group.className = `subcategory-group depth-${depth}`;
-
-    const groupTitle = document.createElement("strong");
-    groupTitle.textContent = groupName;
-    group.appendChild(groupTitle);
-
-    const groupList = document.createElement("div");
-    groupList.className = "subcategory-list nested";
-
-    if (Array.isArray(groupItems) && groupItems.length === 0) {
-      groupList.appendChild(createPill(groupName));
-      groupTitle.remove();
-    } else {
-      renderItems(groupItems, groupList, depth + 1);
-    }
-
-    group.appendChild(groupList);
-    container.appendChild(group);
-  });
-}
-
 function renderCategory(name) {
-  title.textContent = name;
-  list.innerHTML = "";
-
-  renderItems(categories[name], list);
-
-  [...tabs.querySelectorAll("button")].forEach((button) => {
-    button.classList.toggle("active", button.textContent === name);
-  });
+  ...
 }
 
 Object.keys(categories).forEach((name, index) => {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.textContent = name;
-  button.addEventListener("click", () => renderCategory(name));
-  if (index === 0) button.classList.add("active");
-  tabs.appendChild(button);
+  ...
 });
 
 renderCategory("Local Food");
 
 function handleSignup(formId, noteId) {
-  const form = document.querySelector(`#${formId}`);
-  const note = document.querySelector(`#${noteId}`);
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = form.querySelector('input[type="email"]').value.trim();
-    if (!email) return;
-
-    const button = form.querySelector('button[type="submit"]');
-    button.disabled = true;
-    note.classList.remove("is-error");
-    note.textContent = "Joining...";
-
-    try {
-      const response = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      if (!response.ok) throw new Error("Signup failed");
-
-      note.textContent = "You're on the list. We'll let you know when Stumbl is ready.";
-      form.reset();
-    } catch {
-      note.classList.add("is-error");
-      note.textContent = "We couldn't add you just yet. Please try again.";
-    } finally {
-      button.disabled = false;
-    }
-  });
+  ...
 }
 
 handleSignup("heroSignup", "heroNote");
