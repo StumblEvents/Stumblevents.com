@@ -27,28 +27,36 @@ body {
   background: #f7ecdc;
 }
 
-/* Keeps your old background image fixed/stationary */
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background: #f7ecdc;
+}
+
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -2;
   background-image:
-    linear-gradient(180deg, rgba(255, 247, 232, 0.18), rgba(255, 247, 232, 0.78)),
-    url("assets/splash-day.png");
+    linear-gradient(
+      180deg,
+      rgba(255, 247, 232, 0.10),
+      rgba(255, 247, 232, 0.38)
+    ),
+    url("assets/181C2F4B-1D1E-4964-94B7-0D2818F91464.png");
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
-/* Light overlay so text/cards float above the background */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: rgba(255, 250, 239, 0.28);
+  background: rgba(255, 250, 239, 0.20);
   pointer-events: none;
 }
 
