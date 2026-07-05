@@ -42,12 +42,12 @@ body::before {
   background-image:
     linear-gradient(
       180deg,
-      rgba(255, 247, 232, 0.10),
-      rgba(255, 247, 232, 0.38)
+      rgba(255, 247, 232, 0.08),
+      rgba(255, 247, 232, 0.34)
     ),
     url("assets/181C2F4B-1D1E-4964-94B7-0D2818F91464.png");
   background-size: cover;
-  background-position: center center;
+  background-position: center top;
   background-repeat: no-repeat;
 }
 
@@ -56,7 +56,7 @@ body::after {
   position: fixed;
   inset: 0;
   z-index: -1;
-  background: rgba(255, 250, 239, 0.20);
+  background: rgba(255, 250, 239, 0.18);
   pointer-events: none;
 }
 
