@@ -26,7 +26,7 @@ body {
   color: var(--text);
   background:
     linear-gradient(rgba(255, 250, 240, 0.44), rgba(255, 250, 240, 0.6)),
-    url("assets/background.jpg");
+    url("assets/stumbl-background.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
