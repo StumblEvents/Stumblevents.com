@@ -828,3 +828,36 @@ footer {
     flex-direction: column;
   }
 }
+/* Text readability overlays */
+.hero-text,
+.category-copy p:not(.eyebrow),
+.about-copy p,
+.story-copy p,
+.about-section p {
+  display: inline;
+  background: rgba(255, 253, 246, 0.58);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.08em 0.22em;
+  border-radius: 0.28em;
+  line-height: 1.75;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7),
+    0 0 12px rgba(255, 253, 246, 0.85);
+}
+
+.hero-text {
+  display: inline-block;
+  margin-bottom: 28px;
+}
+
+.category-copy p:not(.eyebrow) {
+  display: inline-block;
+}
+
+.about-copy p,
+.story-copy p,
+.about-section p {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+}
