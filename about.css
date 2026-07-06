@@ -162,3 +162,16 @@
     font-size: 46px;
   }
 }
+/* Readability background for founder photo caption */
+.founder-photo figcaption {
+  display: inline-block;
+  background: rgba(255, 253, 246, 0.58);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0.12em 0.38em;
+  border-radius: 0.28em;
+  line-height: 1.5;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7),
+    0 0 12px rgba(255, 253, 246, 0.85);
+}
