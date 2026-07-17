@@ -329,6 +329,8 @@ function createTabSection(labelText) {
 }
 
 function renderMainCategories() {
+  if (!tabs) return;
+
   tabs.innerHTML = "";
 
   Object.keys(categories).forEach((categoryName) => {
@@ -348,6 +350,8 @@ function renderMainCategories() {
 }
 
 function renderCategories() {
+  if (!tabs || !title || !list) return;
+
   renderMainCategories();
 
   title.textContent = selectedCategory;
@@ -357,6 +361,10 @@ function renderCategories() {
 
   const subcategorySection = createTabSection("Subcategory");
   const subcategories = getChildren(selectedCategoryData);
+
+  if (!selectedSubcategory && subcategories.length > 0) {
+    selectedSubcategory = subcategories[0].name;
+  }
 
   subcategories.forEach(({ name, value }) => {
     const button = createTabButton(
@@ -377,10 +385,6 @@ function renderCategories() {
   });
 
   list.appendChild(subcategorySection.section);
-
-  if (!selectedSubcategory && subcategories.length > 0) {
-    selectedSubcategory = subcategories[0].name;
-  }
 
   const selectedSubcategoryData = Array.isArray(selectedCategoryData)
     ? null
@@ -452,6 +456,8 @@ function handleSignup(formId, noteId) {
   const form = document.querySelector(`#${formId}`);
   const note = document.querySelector(`#${noteId}`);
 
+  if (!form || !note) return;
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -486,3 +492,22 @@ function handleSignup(formId, noteId) {
 
 handleSignup("heroSignup", "heroNote");
 handleSignup("footerSignup", "footerNote");
+
+document.querySelectorAll(".faq-question").forEach((button) => {
+  button.addEventListener("click", () => {
+    const answerId = button.getAttribute("aria-controls");
+    const answer = document.getElementById(answerId);
+    const icon = button.querySelector(".faq-icon");
+    const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+    button.setAttribute("aria-expanded", String(!isExpanded));
+
+    if (answer) {
+      answer.hidden = isExpanded;
+    }
+
+    if (icon) {
+      icon.textContent = isExpanded ? "+" : "-";
+    }
+  });
+});
