@@ -86,4 +86,113 @@
           </div>
           <div class="page-copy">
             <h3>Home</h3>
-            <p>Browse what is happening this week, jump into categories,
+            <p>Browse what is happening this week, jump into categories, save events, RSVP, and find plans that match how you actually spend your free time.</p>
+          </div>
+        </article>
+
+        <article class="page-card">
+          <div class="mini-phone map-mini">
+            <span class="mini-header">Map</span>
+            <div class="map-pin one">$</div>
+            <div class="map-pin two">🎵</div>
+            <div class="map-pin three">🔒</div>
+          </div>
+          <div class="page-copy">
+            <h3>Map</h3>
+            <p>See events around you with pins, filter by date range, price, category, subcategory, and eventually your own saved notification radius.</p>
+          </div>
+        </article>
+
+        <article class="page-card">
+          <div class="mini-phone create-mini">
+            <span class="mini-header">Create</span>
+            <div class="mini-input"></div>
+            <div class="mini-input half"></div>
+            <div class="mini-button"></div>
+          </div>
+          <div class="page-copy">
+            <h3>Create an Event</h3>
+            <p>Post public or private events, choose a category path, drop a pin, set start and end times, describe parking, and invite people into the plan.</p>
+          </div>
+        </article>
+
+        <article class="page-card">
+          <div class="mini-phone calendar-mini">
+            <span class="mini-header">Calendar</span>
+            <div class="calendar-grid">
+              <span></span><span></span><span class="active"></span><span></span>
+              <span></span><span class="active"></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="page-copy">
+            <h3>Calendar</h3>
+            <p>Keep track of saved and RSVP'd events, send selected events to your phone calendar, and avoid losing the plans you meant to remember.</p>
+          </div>
+        </article>
+
+        <article class="page-card">
+          <div class="mini-phone profile-mini">
+            <span class="mini-header">Profile</span>
+            <div class="avatar"></div>
+            <div class="mini-line"></div>
+            <div class="mini-recs"><span></span><span></span></div>
+          </div>
+          <div class="page-copy">
+            <h3>Profile</h3>
+            <p>Show a little about yourself, add top local recommendations, follow creators, manage notifications, and decide when your profile is visible.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="category-section" id="categories">
+      <div class="category-copy">
+        <p class="eyebrow">Filter by vibe</p>
+        <h2>Click through the categories people will be able to browse.</h2>
+        <p>Stumbl is being built around real-life intent: eat something local, go dance, watch a game, play a sport, volunteer, find a festival, or discover a community event nearby.</p>
+      </div>
+
+      <div class="category-panel">
+        <div class="category-tabs" id="categoryTabs"></div>
+        <div class="category-details">
+          <h3 id="categoryTitle">Local Food</h3>
+          <div id="subcategoryList" class="subcategory-list"></div>
+        </div>
+        <label class="suggestion-box" for="categorySuggestion">
+          What categories or subcategories should Stumbl add next?
+          <textarea id="categorySuggestion" placeholder="Example: open mic nights, chess meetups, pottery classes..."></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section class="beta-section" id="notify">
+      <div class="release-card">
+        <p class="eyebrow">Coming soon</p>
+        <h2>Expected release, September 2026</h2>
+        <p>Join the early list to hear when Stumbl goes live or when beta testing opens.</p>
+        <form class="signup-form" id="footerSignup">
+          <label for="footerEmail">Email</label>
+          <div class="email-row">
+            <input id="footerEmail" type="email" placeholder="you@example.com" required />
+            <button type="submit">Notify me</button>
+          </div>
+          <p class="form-note" id="footerNote" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-copy">
+      <span>Stumbl</span>
+      <span>Expected release, September 2026</span>
+    </div>
+
+    <nav aria-label="Footer links">
+      <a href="support/">Support</a>
+    </nav>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
