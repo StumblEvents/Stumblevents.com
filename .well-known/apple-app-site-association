@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "KKF26CHCH6.com.stumbl.community"
+        ],
+        "components": [
+          {
+            "/": "/events/*"
+          },
+          {
+            "/": "/invite/*"
+          }
+        ]
+      }
+    ]
+  }
+}
