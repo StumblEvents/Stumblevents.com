@@ -29,15 +29,15 @@ function formatEventDate(startTime, endTime, timezone) {
     });
 
     const date = dateFormatter.format(start);
-    const startTimeText = timeFormatter.format(start);
+    const startText = timeFormatter.format(start);
 
     if (!end) {
-      return `${date} • ${startTimeText}`;
+      return `${date} • ${startText}`;
     }
 
-    const endTimeText = timeFormatter.format(end);
+    const endText = timeFormatter.format(end);
 
-    return `${date} • ${startTimeText}–${endTimeText}`;
+    return `${date} • ${startText}–${endText}`;
   } catch {
     return "";
   }
@@ -106,6 +106,7 @@ export default {
     }
 
     const title = escapeHtml(event.title);
+
     const dateTime = escapeHtml(
       formatEventDate(
         event.start_time,
@@ -114,6 +115,17 @@ export default {
       )
     );
 
+    const bannerUrl = event.banner_image_path
+      ? `${supabaseUrl}/storage/v1/object/public/event-images/${event.banner_image_path}`
+      : event.image_url || null;
+
+    const safeBannerUrl = bannerUrl
+      ? escapeHtml(bannerUrl)
+      : null;
+
+    const canonicalUrl =
+      `https://stumblevents.com/events/${encodeURIComponent(event.id)}`;
+
     const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -121,6 +133,26 @@ export default {
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>${title} | Stumbl</title>
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Stumbl">
+  <meta property="og:title" content="${title}">
+  <meta property="og:description" content="${dateTime}">
+  <meta property="og:url" content="${canonicalUrl}">
+
+  ${
+    safeBannerUrl
+      ? `
+  <meta property="og:image" content="${safeBannerUrl}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${title}">
+  <meta name="twitter:description" content="${dateTime}">
+  <meta name="twitter:image" content="${safeBannerUrl}">
+  `
+      : `
+  <meta name="twitter:card" content="summary">
+  `
+  }
 
   <style>
     * {
@@ -144,6 +176,17 @@ export default {
       max-width: 600px;
       background: #121a29;
       border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .banner {
+      width: 100%;
+      aspect-ratio: 1.91 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .content {
       padding: 32px;
     }
 
@@ -183,15 +226,28 @@ export default {
 
 <body>
   <main class="card">
-    <div class="brand">Stumbl</div>
 
-    <h1>${title}</h1>
+    ${
+      safeBannerUrl
+        ? `<img class="banner" src="${safeBannerUrl}" alt="">`
+        : ""
+    }
 
-    <p class="date">${dateTime}</p>
+    <div class="content">
+      <div class="brand">Stumbl</div>
 
-    <a class="button" href="stumbl://events/${encodeURIComponent(event.id)}">
-      Open in Stumbl
-    </a>
+      <h1>${title}</h1>
+
+      <p class="date">${dateTime}</p>
+
+      <a
+        class="button"
+        href="stumbl://events/${encodeURIComponent(event.id)}"
+      >
+        Open in Stumbl
+      </a>
+    </div>
+
   </main>
 </body>
 </html>`;
