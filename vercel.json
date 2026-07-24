@@ -9,5 +9,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/events/:id",
+      "destination": "/api/event?id=:id"
+    }
   ]
 }
