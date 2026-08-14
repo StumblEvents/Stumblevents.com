@@ -10,7 +10,24 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "stumblevents.com"
+        }
+      ],
+      "destination": "https://www.stumblevents.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
+    {
+      "source": "/invite/:token",
+      "destination": "/api/event?invite=:token"
+    },
     {
       "source": "/events/:id",
       "destination": "/api/event?id=:id"

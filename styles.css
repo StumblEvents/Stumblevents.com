@@ -96,6 +96,18 @@ nav {
   font-size: 14px;
 }
 
+.site-header nav a {
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 7px;
+}
+
+.site-header nav a[aria-current="page"] {
+  color: #ffffff;
+  text-decoration-color: var(--gold);
+}
+
 main {
   overflow: hidden;
 }

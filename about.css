@@ -1,11 +1,3 @@
-.site-header nav a[aria-current="page"] {
-  color: #ffffff;
-  text-decoration: underline;
-  text-decoration-color: var(--gold);
-  text-decoration-thickness: 3px;
-  text-underline-offset: 7px;
-}
-
 .about-main {
   overflow: hidden;
 }

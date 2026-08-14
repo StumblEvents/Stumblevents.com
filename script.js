@@ -265,6 +265,47 @@ const categories = {
   ]
 };
 
+function setActiveNavigation() {
+  const navLinks = document.querySelectorAll(".site-header nav a");
+  if (!navLinks.length) return;
+
+  const path = window.location.pathname.replace(/\/index\.html$/, "/");
+  const isHomePath =
+    path === "/" ||
+    path.endsWith("/Stumblevents.com/") ||
+    path.endsWith("/index.html");
+  const activePath = isHomePath && window.location.hash === "#notify"
+    ? "beta"
+    : isHomePath
+      ? "home"
+      : path.endsWith("/about.html")
+        ? "about"
+        : path.endsWith("/support/")
+          ? "support"
+          : "";
+
+  navLinks.forEach((link) => {
+    const linkPath = link.getAttribute("href") || "";
+    const key = link.dataset.navLink ||
+      (linkPath.includes("#notify")
+        ? "beta"
+        : linkPath.includes("about.html")
+          ? "about"
+          : linkPath.includes("support/")
+            ? "support"
+            : "home");
+
+    if (key === activePath) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+}
+
+setActiveNavigation();
+window.addEventListener("hashchange", setActiveNavigation);
+
 const tabs = document.querySelector("#categoryTabs");
 const title = document.querySelector("#categoryTitle");
 const list = document.querySelector("#subcategoryList");
