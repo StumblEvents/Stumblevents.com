@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/.well-known/assetlinks.json",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
       "source": "/.well-known/apple-app-site-association",
       "headers": [
         {
@@ -24,6 +33,10 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/.well-known/assetlinks.json",
+      "destination": "/api/assetlinks"
+    },
     {
       "source": "/invite/:token",
       "destination": "/api/event?invite=:token"
