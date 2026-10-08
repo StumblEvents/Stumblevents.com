@@ -1,9 +1,9 @@
-const PACKAGE_NAME = "com.stumbl.community";
-const DEV_PACKAGE_NAME = "com.stumbl.community.dev";
+const PRODUCTION_PACKAGE_NAME = "com.stumbl.community";
+const DEVELOPMENT_PACKAGE_NAME = "com.stumbl.community.dev";
 
 function fingerprints(environmentVariable) {
   return String(process.env[environmentVariable] || "")
-    .split(",")
+    .split(/[,\n]/)
     .map((value) => value.trim())
     .filter(Boolean);
 }
@@ -17,33 +17,39 @@ export default {
       "ANDROID_DEV_SHA256_CERT_FINGERPRINTS"
     );
 
+    if (!productionFingerprints.length && !developmentFingerprints.length) {
+      return Response.json(
+        { error: "Android App Links is not configured" },
+        { status: 503, headers: { "Cache-Control": "no-store" } }
+      );
+    }
+
     const body = [
-      productionFingerprints.length > 0
+      productionFingerprints.length
         ? {
             relation: ["delegate_permission/common.handle_all_urls"],
             target: {
               namespace: "android_app",
-              package_name: PACKAGE_NAME,
+              package_name: PRODUCTION_PACKAGE_NAME,
               sha256_cert_fingerprints: productionFingerprints,
             },
           }
         : null,
-      developmentFingerprints.length > 0
+      developmentFingerprints.length
         ? {
             relation: ["delegate_permission/common.handle_all_urls"],
             target: {
               namespace: "android_app",
-              package_name: DEV_PACKAGE_NAME,
+              package_name: DEVELOPMENT_PACKAGE_NAME,
               sha256_cert_fingerprints: developmentFingerprints,
             },
           }
         : null,
     ].filter(Boolean);
 
-    return new Response(JSON.stringify(body), {
+    return Response.json(body, {
       headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "s-maxage=300, stale-while-revalidate=3600",
+        "Cache-Control": "public, max-age=300",
         "X-Content-Type-Options": "nosniff",
       },
     });
