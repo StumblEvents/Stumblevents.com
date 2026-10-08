@@ -1,7 +1,17 @@
 {
+  "buildCommand": "node scripts/generate-well-known.mjs",
   "headers": [
     {
       "source": "/.well-known/apple-app-site-association",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/assetlinks.json",
       "headers": [
         {
           "key": "Content-Type",
@@ -12,18 +22,34 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/:path((?!\\.well-known/assetlinks\\.json$)(?!\\.well-known/apple-app-site-association$).*)",
       "has": [
         {
           "type": "host",
           "value": "stumblevents.com"
         }
       ],
-      "destination": "https://www.stumblevents.com/:path*",
+      "destination": "https://www.stumblevents.com/:path",
       "permanent": true
     }
   ],
   "rewrites": [
+    {
+      "source": "/creator/stripe/return",
+      "destination": "/api/creator/stripe/return"
+    },
+    {
+      "source": "/creator/stripe/refresh",
+      "destination": "/api/creator/stripe/refresh"
+    },
+    {
+      "source": "/creator/stripe/development/return",
+      "destination": "/api/creator/stripe/development/return"
+    },
+    {
+      "source": "/creator/stripe/development/refresh",
+      "destination": "/api/creator/stripe/development/refresh"
+    },
     {
       "source": "/invite/:token",
       "destination": "/api/event?invite=:token"

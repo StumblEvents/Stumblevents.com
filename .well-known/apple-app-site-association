@@ -3,6 +3,31 @@
     "details": [
       {
         "appIDs": [
+          "KKF26CHCH6.com.stumbl.community.dev"
+        ],
+        "components": [
+          {
+            "/": "/events/*",
+            "?": {
+              "app": "development"
+            }
+          },
+          {
+            "/": "/invite/*",
+            "?": {
+              "app": "development"
+            }
+          },
+          {
+            "/": "/creator/stripe/development/return"
+          },
+          {
+            "/": "/creator/stripe/development/refresh"
+          }
+        ]
+      },
+      {
+        "appIDs": [
           "KKF26CHCH6.com.stumbl.community"
         ],
         "components": [
@@ -11,6 +36,12 @@
           },
           {
             "/": "/invite/*"
+          },
+          {
+            "/": "/creator/stripe/return"
+          },
+          {
+            "/": "/creator/stripe/refresh"
           }
         ]
       }
