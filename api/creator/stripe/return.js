@@ -1,7 +1,7 @@
 import { createStripeHandoffResponse } from "./handoff.js";
 
 export default {
-  async fetch() {
-    return createStripeHandoffResponse("return");
+  async fetch(request) {
+    return createStripeHandoffResponse("return", "production", request);
   },
 };

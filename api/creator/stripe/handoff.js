@@ -47,7 +47,15 @@ function handoffPage({ appUrl, appName, title, message }) {
 </html>`;
 }
 
-export function createStripeHandoffResponse(callback, environment = "production") {
+function requestsNativeAuthHandoff(request) {
+  try {
+    return new URL(request?.url).searchParams.get("native_auth") === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function createStripeHandoffResponse(callback, environment = "production", request) {
   const handoff = CALLBACKS[callback];
 
   if (!handoff) {
@@ -61,6 +69,21 @@ export function createStripeHandoffResponse(callback, environment = "production"
   const scheme = isDevelopment ? "stumbl-dev" : "stumbl";
   const appName = isDevelopment ? "Stumbl Dev" : "Stumbl";
   const appUrl = `${scheme}://creator/stripe/${callback}`;
+
+  // Stripe requires an HTTPS return URL, but iOS ASWebAuthenticationSession
+  // completes only when its main frame navigates to the custom scheme supplied
+  // to openAuthSessionAsync. This server redirect crosses that boundary without
+  // relying on JavaScript execution in the callback page.
+  if (requestsNativeAuthHandoff(request)) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: appUrl,
+        "Cache-Control": "no-store, max-age=0",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+  }
 
   return new Response(handoffPage({ ...handoff, appUrl, appName }), {
     headers: {
@@ -79,6 +102,6 @@ export function createStripeHandoffResponse(callback, environment = "production"
 export default {
   async fetch(request) {
     const callback = new URL(request.url).searchParams.get("callback");
-    return createStripeHandoffResponse(callback);
+    return createStripeHandoffResponse(callback, "production", request);
   },
 };
