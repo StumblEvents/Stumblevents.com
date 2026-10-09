@@ -1,5 +1,6 @@
 {
   "buildCommand": "node scripts/generate-well-known.mjs",
+  "outputDirectory": ".",
   "headers": [
     {
       "source": "/.well-known/apple-app-site-association",

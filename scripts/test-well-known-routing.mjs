@@ -35,6 +35,7 @@ try {
   const vercel = JSON.parse(await fs.readFile(path.join(root, "vercel.json"), "utf8"));
 
   assert.equal(vercel.buildCommand, "node scripts/generate-well-known.mjs");
+  assert.equal(vercel.outputDirectory, ".");
   assert(!vercel.rewrites.some((rule) => rule.source.startsWith("/.well-known/")));
   assert(vercel.headers.some((rule) => rule.source === "/.well-known/apple-app-site-association"));
   assert(vercel.headers.some((rule) => rule.source === "/.well-known/assetlinks.json"));
