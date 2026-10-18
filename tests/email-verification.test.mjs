@@ -9,6 +9,31 @@ async function loadHandler() {
   return import(`data:text/javascript,${encodeURIComponent(source)}`);
 }
 
+async function loadPageModule() {
+  const source = await readFile("email-verified/verification.js", "utf8");
+  return import(`data:text/javascript,${encodeURIComponent(source)}`);
+}
+
+function pageFixture(hash = "") {
+  const elements = new Map();
+  for (const id of ["result-title", "resultMessage", "statusEyebrow", "statusIcon", "openStumbl"]) {
+    elements.set(id, { id, className: "", textContent: "", hidden: id === "openStumbl" });
+  }
+  const replacements = [];
+  return {
+    documentRef: {
+      title: "Email verification | Stumbl",
+      getElementById: (id) => elements.get(id),
+    },
+    windowRef: {
+      location: { hash, pathname: "/email-verified" },
+      history: { replaceState: (...args) => replacements.push(args) },
+    },
+    elements,
+    replacements,
+  };
+}
+
 async function withSupabaseMock(mock, run) {
   const originalFetch = globalThis.fetch;
   const originalUrl = process.env.SUPABASE_URL;
@@ -116,4 +141,93 @@ test("returns a retryable failure when Supabase is unavailable", async () => {
     assert.equal(response.status, 503);
     assert.deepEqual(await response.json(), { verified: false, reason: "unavailable" });
   });
+});
+
+test("automatically verifies a TokenHash and removes it from browser history", async () => {
+  const { initializeVerification } = await loadPageModule();
+  const fixture = pageFixture(`#token_hash=${TOKEN_HASH}&type=email`);
+  let resolveVerification;
+  const verification = new Promise((resolve) => { resolveVerification = resolve; });
+  let calls = 0;
+
+  initializeVerification({
+    ...fixture,
+    fetchImpl: async (url, options) => {
+      calls += 1;
+      assert.equal(url, "/api/email-verification-result");
+      assert.equal(options.credentials, "omit");
+      assert.equal(options.referrerPolicy, "no-referrer");
+      assert.deepEqual(JSON.parse(options.body), { token_hash: TOKEN_HASH });
+      return verification;
+    },
+  });
+
+  assert.equal(calls, 1);
+  assert.equal(fixture.replacements.length, 1);
+  assert.deepEqual(fixture.replacements[0], [null, "Email verification | Stumbl", "/email-verified"]);
+  assert.equal(fixture.elements.get("result-title").textContent, "Verifying your email…");
+
+  resolveVerification(new Response(JSON.stringify({ verified: true }), { status: 200 }));
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(fixture.elements.get("result-title").textContent, "Email verified!");
+  assert.equal(fixture.elements.get("openStumbl").hidden, false);
+});
+
+test("page displays an accurate failed-verification result and does not offer the app button", async () => {
+  const { initializeVerification } = await loadPageModule();
+  const fixture = pageFixture(`#token_hash=${TOKEN_HASH}&type=email`);
+
+  initializeVerification({
+    ...fixture,
+    fetchImpl: async () => new Response(JSON.stringify({ verified: false, reason: "invalid_or_expired" }), { status: 400 }),
+  });
+
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(fixture.elements.get("result-title").textContent, "We couldn’t verify this email link");
+  assert.equal(fixture.elements.get("openStumbl").hidden, true);
+});
+
+test("page only starts automatic verification once when initialization is repeated", async () => {
+  const { initializeVerification } = await loadPageModule();
+  const fixture = pageFixture(`#token_hash=${TOKEN_HASH}&type=email`);
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    return new Response(JSON.stringify({ verified: true }), { status: 200 });
+  };
+
+  initializeVerification({ ...fixture, fetchImpl });
+  initializeVerification({ ...fixture, fetchImpl });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(calls, 1);
+});
+
+test("email verification page uses stable asset URLs and responsive, image-free page styling", async () => {
+  const [html, css, vercelConfig] = await Promise.all([
+    readFile("email-verified/index.html", "utf8"),
+    readFile("email-verified/verification.css", "utf8"),
+    readFile("vercel.json", "utf8"),
+  ]);
+  const vercel = JSON.parse(vercelConfig);
+
+  assert.match(html, /href="\/email-verified\/verification\.css"/);
+  assert.match(html, /src="\/email-verified\/verification\.js"/);
+  assert.match(html, /id="openStumbl" href="stumbl:\/\/"/);
+  assert.equal(
+    new URL("/email-verified/verification.css", "https://www.stumblevents.com/email-verified").pathname,
+    "/email-verified/verification.css",
+  );
+  assert.doesNotMatch(css, /181C2F4B-1D1E-4964-94B7-0D2818F91464|url\(/);
+  assert.match(css, /min-height: 100dvh/);
+  assert.match(css, /width: clamp\(160px, 48vw, 190px\)/);
+  assert.match(css, /background: var\(--cream\)/);
+  assert.equal(vercel.rewrites.some((rule) => rule.source.startsWith("/email-verified")), false);
+  assert.deepEqual(vercel.rewrites.map((rule) => rule.source), [
+    "/creator/stripe/return",
+    "/creator/stripe/refresh",
+    "/creator/stripe/development/return",
+    "/creator/stripe/development/refresh",
+    "/invite/:token",
+    "/events/:id",
+  ]);
 });
