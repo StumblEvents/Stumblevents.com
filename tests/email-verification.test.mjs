@@ -221,6 +221,7 @@ test("email verification page uses stable asset URLs and responsive, image-free 
   assert.match(css, /min-height: 100dvh/);
   assert.match(css, /width: clamp\(160px, 48vw, 190px\)/);
   assert.match(css, /background: var\(--cream\)/);
+  assert.match(css, /\.open-button\[hidden\] \{ display: none; \}/);
   assert.equal(vercel.rewrites.some((rule) => rule.source.startsWith("/email-verified")), false);
   assert.deepEqual(vercel.rewrites.map((rule) => rule.source), [
     "/creator/stripe/return",

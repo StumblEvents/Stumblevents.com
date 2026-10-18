@@ -95,6 +95,8 @@ h1 { margin: 0 0 14px; font-size: clamp(32px, 8vw, 44px); line-height: 1.04; let
   text-decoration: none;
 }
 
+.open-button[hidden] { display: none; }
+
 .support-link { display: inline-block; margin-top: 23px; color: var(--teal); font-size: 14px; font-weight: 850; text-underline-offset: 4px; }
 
 .open-button:focus-visible, .support-link:focus-visible, .brand:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
