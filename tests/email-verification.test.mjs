@@ -212,6 +212,7 @@ test("email verification page uses stable asset URLs and responsive, image-free 
 
   assert.match(html, /href="\/email-verified\/verification\.css"/);
   assert.match(html, /src="\/email-verified\/verification\.js"/);
+  assert.match(html, /src="https:\/\/ndfwnylpwrutbvhheesl\.supabase\.co\/storage\/v1\/object\/public\/email-assets\/stumbl-email-logo\.png"/);
   assert.match(html, /id="openStumbl" href="stumbl:\/\/"/);
   assert.equal(
     new URL("/email-verified/verification.css", "https://www.stumblevents.com/email-verified").pathname,
@@ -219,7 +220,8 @@ test("email verification page uses stable asset URLs and responsive, image-free 
   );
   assert.doesNotMatch(css, /181C2F4B-1D1E-4964-94B7-0D2818F91464|url\(/);
   assert.match(css, /min-height: 100dvh/);
-  assert.match(css, /width: clamp\(160px, 48vw, 190px\)/);
+  assert.match(css, /width: clamp\(200px, 58vw, 240px\)/);
+  assert.match(css, /object-fit: contain/);
   assert.match(css, /background: var\(--cream\)/);
   assert.match(css, /\.open-button\[hidden\] \{ display: none; \}/);
   assert.equal(vercel.rewrites.some((rule) => rule.source.startsWith("/email-verified")), false);
