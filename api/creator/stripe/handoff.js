@@ -15,6 +15,9 @@ function handoffPage({ appUrl, appName, title, message }) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=20261018">
+    <link rel="shortcut icon" href="/favicon.ico?v=20261018">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png?v=20261018">
     <meta name="robots" content="noindex, nofollow">
     <title>${title}</title>
     <style>
