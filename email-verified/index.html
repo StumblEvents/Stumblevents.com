@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Email verification | Stumbl</title>
+  <link rel="icon" href="../assets/icon.png" />
+  <link rel="stylesheet" href="verification.css" />
+</head>
+<body>
+  <main class="verification-shell">
+    <a class="brand" href="../" aria-label="Stumbl home">
+      <img src="../assets/icon.png" alt="" />
+      <span>Stumbl</span>
+    </a>
+
+    <section class="result-card" aria-labelledby="result-title">
+      <div class="status-icon pending" id="statusIcon" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <p class="eyebrow" id="statusEyebrow">Just a moment</p>
+      <h1 id="result-title">Verifying your email</h1>
+      <p class="message" id="resultMessage" aria-live="polite">
+        Opened this from your Stumbl email? Confirm below to finish verifying your address.
+      </p>
+      <button class="verify-button" id="verifyEmail" type="button" hidden>Verify email</button>
+      <a class="open-button" id="openStumbl" href="stumbl://" hidden>Open Stumbl</a>
+      <a class="support-link" href="../support/">Need help?</a>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const title = document.getElementById("result-title");
+      const message = document.getElementById("resultMessage");
+      const eyebrow = document.getElementById("statusEyebrow");
+      const icon = document.getElementById("statusIcon");
+      const verifyButton = document.getElementById("verifyEmail");
+      const openButton = document.getElementById("openStumbl");
+      let tokenHash = "";
+
+      const showFailure = (isUnavailable = false) => {
+        icon.className = "status-icon failure";
+        eyebrow.textContent = isUnavailable ? "Please try again" : "Verification unavailable";
+        title.textContent = isUnavailable ? "We couldn’t reach verification" : "We couldn’t verify this email link";
+        message.textContent = isUnavailable
+          ? "Please check your connection and try again. If it still doesn’t work, request a new verification email from Stumbl."
+          : "This link may have expired, already been used, or be invalid. Request a new verification email from Stumbl and try again.";
+        verifyButton.hidden = true;
+        openButton.hidden = true;
+      };
+
+      const showSuccess = () => {
+        icon.className = "status-icon success";
+        eyebrow.textContent = "You’re all set";
+        title.textContent = "Email verified!";
+        message.textContent = "Your email address has been successfully verified. You can now return to Stumbl and continue discovering and creating events.";
+        verifyButton.hidden = true;
+        openButton.hidden = false;
+      };
+
+      const fragment = new URLSearchParams(window.location.hash.slice(1));
+      tokenHash = fragment.get("token_hash") || "";
+      const type = fragment.get("type");
+
+      // Fragments never reach the server. Remove the one-time hash from browser history
+      // before displaying the confirmation control.
+      if (window.location.hash) {
+        window.history.replaceState(null, document.title, window.location.pathname);
+      }
+
+      if (!tokenHash || (type && type !== "email")) {
+        showFailure();
+        return;
+      }
+
+      icon.className = "status-icon pending";
+      eyebrow.textContent = "Ready to verify";
+      title.textContent = "Verify your email";
+      verifyButton.hidden = false;
+
+      verifyButton.addEventListener("click", (event) => {
+        // Avoid consuming a one-time token from ordinary mail-client prefetching.
+        if (!event.isTrusted || !tokenHash) return;
+
+        verifyButton.disabled = true;
+        verifyButton.textContent = "Verifying…";
+        eyebrow.textContent = "Just a moment";
+        title.textContent = "Verifying your email";
+        message.textContent = "We’re securely confirming your email address.";
+
+      fetch("/api/email-verification-result", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token_hash: tokenHash }),
+        cache: "no-store",
+        credentials: "omit",
+        referrerPolicy: "no-referrer",
+      })
+        .then(async (response) => ({ response, result: await response.json().catch(() => null) }))
+        .then(({ result }) => result && result.verified === true
+          ? showSuccess()
+          : showFailure(result?.reason === "unavailable"))
+        .catch(() => showFailure(true))
+        .finally(() => { tokenHash = ""; });
+      });
+    })();
+  </script>
+</body>
+</html>
