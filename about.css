@@ -1,65 +1,101 @@
+/* About uses the homepage's white-section language without changing shared pages. */
+.about-page {
+  background: #fff;
+  color: #101827;
+}
+
+.about-page::before,
+.about-page::after {
+  display: none;
+}
+
 .about-main {
   overflow: hidden;
+  background: #fff;
 }
 
 .about-intro {
-  min-height: calc(100vh - 53px);
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.75fr);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .72fr);
   align-items: center;
-  gap: clamp(36px, 7vw, 96px);
-  max-width: 1440px;
+  gap: clamp(48px, 9vw, 132px);
+  width: min(1240px, 100%);
   margin: 0 auto;
-  padding: clamp(56px, 8vw, 112px) clamp(20px, 5vw, 72px);
+  padding: clamp(76px, 10vw, 144px) clamp(22px, 6vw, 82px);
 }
 
 .about-copy {
-  max-width: 760px;
+  max-width: 610px;
+}
+
+.about-copy .eyebrow {
+  margin: 0 0 14px;
+  color: #08a886;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
 
 .about-copy h1 {
-  font-size: clamp(48px, 7vw, 82px);
-  margin-bottom: 30px;
+  margin: 0 0 28px;
+  color: #101827;
+  font-size: clamp(44px, 5.6vw, 72px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -.055em;
 }
 
+/* Override the legacy readability chips inherited from the original global styles. */
 .about-copy p:not(.eyebrow) {
-  color: #34495e;
-  font-size: clamp(17px, 1.7vw, 20px);
-  line-height: 1.72;
-  margin-bottom: 18px;
+  display: block;
+  margin: 0 0 20px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #596579;
+  font-size: clamp(17px, 1.55vw, 19px);
+  line-height: 1.7;
+  text-shadow: none;
 }
 
 .about-copy em {
-  color: var(--teal);
+  color: #08a886;
   font-style: normal;
-  font-weight: 900;
+  font-weight: 850;
 }
 
 .founder-photo {
+  width: 100%;
+  max-width: 430px;
   margin: 0;
+  justify-self: end;
 }
 
 .founder-photo img {
   display: block;
   width: 100%;
-  max-height: 720px;
-  object-fit: cover;
-  object-position: center 28%;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(16, 24, 39, .10);
 }
 
 .founder-photo figcaption {
-  color: var(--muted);
+  display: block;
+  margin: 11px 0 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #6b7280;
   font-size: 13px;
   line-height: 1.5;
-  margin-top: 10px;
+  text-shadow: none;
 }
 
 .origin-video {
-  padding: clamp(64px, 9vw, 120px) clamp(20px, 5vw, 72px);
-  background: rgba(255, 253, 246, 0.82);
-  border-block: 1px solid var(--line);
+  padding: clamp(70px, 9vw, 120px) clamp(22px, 6vw, 82px);
+  border: 0;
+  background: #fff;
 }
 
 .video-heading,
@@ -68,104 +104,53 @@
   margin-inline: auto;
 }
 
-.video-heading {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.video-heading h2 {
-  max-width: 850px;
-  margin-inline: auto;
-}
-
-.video-heading > p:last-child {
-  color: var(--muted);
-  font-size: 18px;
-  line-height: 1.6;
-  margin: 0 auto;
-  max-width: 700px;
-}
-
-.video-frame {
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: 8px;
-  background: var(--ink);
-  box-shadow: var(--shadow);
-}
-
-.video-frame iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
+.video-heading { margin-bottom: 32px; text-align: center; }
+.video-heading h2 { max-width: 850px; margin-inline: auto; }
+.video-heading > p:last-child { max-width: 700px; margin: 0 auto; color: #596579; font-size: 18px; line-height: 1.6; }
+.video-frame { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: #101827; }
+.video-frame iframe { width: 100%; height: 100%; border: 0; }
 
 .about-cta {
+  padding: clamp(72px, 10vw, 128px) 22px;
+  border-top: 1px solid #edf0f4;
+  background: #fff;
   text-align: center;
-  padding: clamp(72px, 10vw, 128px) 20px;
 }
 
-.about-cta h2 {
-  max-width: 700px;
-  margin: 0 auto 28px;
-}
+.about-cta .eyebrow { color: #08a886; }
+.about-cta h2 { max-width: 700px; margin: 0 auto 28px; color: #101827; }
 
 .about-button {
   display: inline-flex;
-  min-height: 52px;
   align-items: center;
   justify-content: center;
+  min-height: 52px;
   padding: 0 24px;
-  border-radius: 8px;
-  background: var(--teal);
-  color: #ffffff;
-  font-weight: 950;
-  box-shadow: 0 14px 32px rgba(22, 116, 111, 0.24);
+  border-radius: 12px;
+  background: #0c9176;
+  box-shadow: none;
+  color: #fff;
+  font-weight: 850;
 }
 
 .about-button:hover,
-.about-button:focus-visible {
-  background: #105e5a;
-}
+.about-button:focus-visible { background: #087761; }
 
 @media (max-width: 860px) {
   .about-intro {
-    min-height: auto;
     grid-template-columns: 1fr;
+    gap: 46px;
   }
 
   .founder-photo {
-    width: min(100%, 560px);
+    width: min(100%, 500px);
+    justify-self: start;
   }
 }
 
 @media (max-width: 620px) {
-  .site-header {
-    flex-wrap: wrap;
-  }
-
-  .site-header nav {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 16px;
-    font-size: 13px;
-  }
-
-  .about-copy h1 {
-    font-size: 46px;
-  }
-}
-/* Readability background for founder photo caption */
-.founder-photo figcaption {
-  display: inline-block;
-  background: rgba(255, 253, 246, 0.58);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  padding: 0.12em 0.38em;
-  border-radius: 0.28em;
-  line-height: 1.5;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7),
-    0 0 12px rgba(255, 253, 246, 0.85);
+  .about-intro { padding-top: 62px; padding-bottom: 76px; }
+  .about-copy h1 { font-size: clamp(42px, 12vw, 54px); }
+  .about-copy p:not(.eyebrow) { font-size: 17px; line-height: 1.65; }
+  .founder-photo { width: 100%; }
 }

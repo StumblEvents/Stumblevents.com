@@ -1,3 +1,9 @@
+LOCAL PREVIEW
+
+Run `node scripts/local-preview.mjs`, then open http://127.0.0.1:4173.
+This project preview server serves /support, /support/, and /support/index.html as
+the Support page and never exposes directory listings.
+
 STUMBL ABOUT PAGE - INSTALLATION
 
 1. Upload about.html and about.css to the root of your GitHub repository,

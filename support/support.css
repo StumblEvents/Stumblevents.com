@@ -1,0 +1,209 @@
+/* Support shares About's quiet, white visual language without changing other pages. */
+.support-page {
+  background: #fff;
+  color: #101827;
+}
+
+.support-page::before,
+.support-page::after {
+  display: none;
+}
+
+.support-page main {
+  overflow: hidden;
+  background: #fff;
+}
+
+.support-page .support-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .78fr);
+  align-items: start;
+  gap: clamp(42px, 7vw, 96px);
+  width: min(1240px, 100%);
+  min-height: 0;
+  margin: 0 auto;
+  padding: clamp(62px, 7vw, 96px) clamp(22px, 6vw, 82px) clamp(52px, 6vw, 76px);
+}
+
+.support-page .support-hero-copy {
+  max-width: 610px;
+}
+
+.support-page .eyebrow {
+  margin: 0 0 14px;
+  color: #08a886;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.support-page .support-hero h1,
+.support-page .section-heading h2,
+.support-page .support-card h2 {
+  color: #101827;
+  font-weight: 900;
+  letter-spacing: -.055em;
+}
+
+.support-page .support-hero h1 {
+  margin: 0 0 26px;
+  font-size: clamp(44px, 5.6vw, 72px);
+  line-height: 1;
+}
+
+.support-page .hero-text,
+.support-page .support-card p {
+  display: block;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #596579;
+  font-size: clamp(17px, 1.55vw, 19px);
+  line-height: 1.7;
+  text-shadow: none;
+}
+
+.support-page .support-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.support-page .primary-support-card {
+  padding: clamp(30px, 4vw, 42px);
+  border-radius: 20px;
+  background: #102239;
+  color: #fff;
+}
+
+.support-page .primary-support-card .eyebrow {
+  color: #65d7b5;
+}
+
+.support-page .primary-support-card h2 {
+  color: #fff;
+}
+
+.support-page .primary-support-card p,
+.support-page .primary-support-card .response-note {
+  color: rgba(255, 255, 255, .76) !important;
+}
+
+.support-page .support-card .eyebrow { margin-bottom: 12px; }
+.support-page .support-card h2 { margin: 0 0 18px; font-size: clamp(32px, 3.4vw, 45px); line-height: 1.06; }
+.support-page .support-card p { font-size: 17px; }
+
+.support-page .support-email {
+  display: inline-flex;
+  margin: 22px 0 14px;
+  color: #087d68;
+  font-weight: 850;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.support-page .primary-support-card .support-email {
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+}
+
+.support-page .primary-support-card .support-email::before {
+  content: "✉";
+  color: #00A878;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.support-page .response-note {
+  margin: 0 0 24px !important;
+  color: #34495e !important;
+  font-size: 15px !important;
+  font-weight: 750;
+}
+
+.support-page .support-button {
+  display: inline-flex;
+  width: auto;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  border-radius: 12px;
+  background: #00A878;
+  box-shadow: none;
+  color: #fff;
+  font-weight: 850;
+}
+
+.support-page .support-button:hover,
+.support-page .support-button:focus-visible { background: #008a63; }
+.support-page .secondary-button { background: #101827; }
+.support-page .secondary-button:hover,
+.support-page .secondary-button:focus-visible { background: #263247; }
+
+.support-page .faq-section,
+.support-page .partnership-section {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: clamp(64px, 8vw, 112px) clamp(22px, 6vw, 82px);
+  border-top: 1px solid #edf0f4;
+}
+
+.support-page .faq-section {
+  width: 100%;
+  max-width: none;
+  padding-inline: clamp(22px, 6vw, 82px);
+  background: #f5f8f8;
+}
+
+.support-page .faq-section .section-heading,
+.support-page .faq-section .faq-list {
+  width: min(100%, 1076px);
+  margin-inline: auto;
+}
+
+.support-page .section-heading { max-width: 700px; margin-bottom: 32px; }
+.support-page .section-heading h2 { margin: 0; font-size: clamp(38px, 4.6vw, 58px); line-height: 1; }
+.support-page .faq-list { max-width: 900px; gap: 12px; }
+
+.support-page .faq-item {
+  border: 1px solid #e1e8e7;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.support-page .faq-question {
+  min-height: 70px;
+  padding: 18px 20px;
+  border-radius: 0;
+  background: transparent;
+  color: #101827;
+  font-weight: 800;
+}
+
+.support-page .faq-icon { background: #e1f7f0; color: #00A878; }
+.support-page .faq-answer { padding: 0 56px 22px 20px; }
+.support-page .faq-answer p { color: #596579; line-height: 1.65; }
+.support-page .faq-answer a { color: #087d68; }
+
+.support-page .partnership-section { padding-top: clamp(64px, 8vw, 112px); }
+.support-page .partnership-card { max-width: 650px; }
+
+@media (max-width: 860px) {
+  .support-page .support-hero { grid-template-columns: 1fr; gap: 38px; }
+}
+
+@media (max-width: 620px) {
+  .support-page .support-hero { padding-top: 52px; }
+  .support-page .support-hero h1 { font-size: clamp(42px, 12vw, 54px); }
+  .support-page .hero-text { font-size: 17px; line-height: 1.65; }
+  .support-page .faq-answer { padding-right: 20px; }
+  .support-page .support-button { width: 100%; }
+}

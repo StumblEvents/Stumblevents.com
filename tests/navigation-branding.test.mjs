@@ -27,5 +27,6 @@ test("shared navigation wordmark preserves its full responsive aspect ratio", as
   assert.match(css, /@media \(min-width: 621px\) \{\s*\.brand img \{ width: clamp\(120px, 8vw, 130px\); \}/);
   assert.match(css, /height: auto/);
   assert.match(css, /object-fit: contain/);
-  assert.match(aboutCss, /\.site-header nav \{\s*width: 100%;\s*justify-content: flex-start;\s*flex-wrap: wrap;/);
+  assert.match(aboutCss, /\.about-page::before,\s*\.about-page::after \{\s*display: none;/);
+  assert.match(css, /\.inner-header nav \{\s*width: auto;\s*flex-wrap: nowrap;/);
 });

@@ -40,6 +40,11 @@
   ],
   "redirects": [
     {
+      "source": "/beta",
+      "destination": "/#notify",
+      "permanent": false
+    },
+    {
       "source": "/:path((?!\\.well-known/assetlinks\\.json$)(?!\\.well-known/apple-app-site-association$).*)",
       "has": [
         {
@@ -52,6 +57,14 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/support",
+      "destination": "/support/index.html"
+    },
+    {
+      "source": "/support/",
+      "destination": "/support/index.html"
+    },
     {
       "source": "/creator/stripe/return",
       "destination": "/api/creator/stripe/return"

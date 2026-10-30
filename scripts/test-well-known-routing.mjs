@@ -39,8 +39,11 @@ try {
   assert(!vercel.rewrites.some((rule) => rule.source.startsWith("/.well-known/")));
   assert(vercel.headers.some((rule) => rule.source === "/.well-known/apple-app-site-association"));
   assert(vercel.headers.some((rule) => rule.source === "/.well-known/assetlinks.json"));
-  assert.match(vercel.redirects[0].source, /apple-app-site-association/);
-  assert.match(vercel.redirects[0].source, /assetlinks\\\.json/);
+  const canonicalHostRedirect = vercel.redirects.find((rule) =>
+    rule.has?.some((condition) => condition.type === "host" && condition.value === "stumblevents.com")
+  );
+  assert.match(canonicalHostRedirect.source, /apple-app-site-association/);
+  assert.match(canonicalHostRedirect.source, /assetlinks\\\.json/);
 
   const details = aasa.applinks.details;
   assert.deepEqual(details.map((detail) => detail.appIDs), [

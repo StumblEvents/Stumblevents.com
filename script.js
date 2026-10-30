@@ -275,7 +275,7 @@ function setActiveNavigation() {
     path.endsWith("/Stumblevents.com/") ||
     path.endsWith("/index.html");
   const activePath = isHomePath && window.location.hash === "#notify"
-    ? "beta"
+    ? "launch"
     : isHomePath
       ? "home"
       : path.endsWith("/about.html")
@@ -288,7 +288,7 @@ function setActiveNavigation() {
     const linkPath = link.getAttribute("href") || "";
     const key = link.dataset.navLink ||
       (linkPath.includes("#notify")
-        ? "beta"
+        ? "launch"
         : linkPath.includes("about.html")
           ? "about"
           : linkPath.includes("support/")
@@ -520,7 +520,7 @@ function handleSignup(formId, noteId) {
       if (!response.ok) throw new Error("Signup failed");
 
       note.textContent =
-        "You're on the list. We'll let you know when Stumbl is ready.";
+        "You're on the list. We'll email you when Stumbl publicly launches.";
       form.reset();
     } catch {
       note.classList.add("is-error");
