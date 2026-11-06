@@ -20,6 +20,9 @@ function localFileForPathname(pathname) {
   if (pathname === "/support" || pathname === "/support/" || pathname === "/support/index.html") {
     return "support/index.html";
   }
+  if (pathname === "/delete-account" || pathname === "/delete-account/" || pathname === "/delete-account/index.html") {
+    return "delete-account/index.html";
+  }
   return pathname.replace(/^\/+/, "");
 }
 

@@ -196,6 +196,17 @@
 .support-page .partnership-section { padding-top: clamp(64px, 8vw, 112px); }
 .support-page .partnership-card { max-width: 650px; }
 
+.support-page .legal-section {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  padding: clamp(64px, 8vw, 112px) clamp(22px, 6vw, 82px);
+  border-top: 1px solid #edf0f4;
+}
+.support-page .legal-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 920px; }
+.support-page .legal-links a { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 68px; padding: 18px 20px; border: 1px solid #e1e8e7; border-radius: 14px; background: #fff; color: #101827; font-weight: 800; text-decoration: none; }
+.support-page .legal-links a:hover, .support-page .legal-links a:focus-visible { border-color: #89d7c1; background: #f5fbf9; color: #087d68; }
+.support-page .legal-links a span:last-child { color: #00A878; font-size: 22px; }
+
 @media (max-width: 860px) {
   .support-page .support-hero { grid-template-columns: 1fr; gap: 38px; }
 }
@@ -206,4 +217,5 @@
   .support-page .hero-text { font-size: 17px; line-height: 1.65; }
   .support-page .faq-answer { padding-right: 20px; }
   .support-page .support-button { width: 100%; }
+  .support-page .legal-links { grid-template-columns: 1fr; }
 }

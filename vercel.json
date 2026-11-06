@@ -58,6 +58,10 @@
   ],
   "rewrites": [
     {
+      "source": "/delete-account",
+      "destination": "/delete-account/index.html"
+    },
+    {
       "source": "/support",
       "destination": "/support/index.html"
     },

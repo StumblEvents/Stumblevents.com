@@ -226,6 +226,7 @@ test("email verification page uses stable asset URLs and responsive, image-free 
   assert.match(css, /\.open-button\[hidden\] \{ display: none; \}/);
   assert.equal(vercel.rewrites.some((rule) => rule.source.startsWith("/email-verified")), false);
   assert.deepEqual(vercel.rewrites.map((rule) => rule.source), [
+    "/delete-account",
     "/support",
     "/support/",
     "/creator/stripe/return",
