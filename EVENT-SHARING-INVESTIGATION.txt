@@ -1,0 +1,174 @@
+SUPERSEDED NOVEMBER 20, 2026: The expanded implementation was recovered from
+the app repository and original staging package. See EVENT-SHARING-RESTORATION.txt.
+The original website-only investigation below is retained as historical evidence;
+its missing-source conclusion does not apply to the recovered app-repository code.
+
+Stumbl Website event-sharing investigation
+Reviewed November 19, 2026 (America/Denver)
+Working repository: C:\Stumbl Website
+No deployment, Git push, production-data change, or mobile-code change performed.
+
+CONCLUSION
+The screenshot matches the website's current minimal HTML renderer, not a
+separate mobile fallback. No expanded browser event page was found in this
+website repository's available history or other inspected website artifacts.
+Publishing the existing main branch again would reproduce the same card.
+The remembered expanded implementation has not been located; this investigation
+does not establish that it never existed outside the inspected sources.
+
+EVIDENCE AND SEARCH SCOPE
+- Origin: https://github.com/StumblEvents/Stumblevents.com.git
+- Local HEAD and remote main: c10a907e1f28c5e3a901be0a1ea9dd6a02af30ed.
+- git ls-remote --heads --tags origin returned main only, with no tags.
+- Reviewed all 90 reachable commits, event file history, reflogs, worktree list,
+  and unreachable objects. Two unreachable commits concern email verification.
+- Event history: a315c12/d326f7d route probes; f37ca0f public JSON;
+  1941077 minimal HTML; 5f511ad cover/social previews; 40b0292 shared renderer
+  and private-invite previews. None provides expanded browser event details.
+- Also inspected the website checkout at
+  C:\Users\chadd\OneDrive\Documents\stumbl-site-assetlinks-fix.
+  It is behind this repository and has no different event implementation.
+- The original Downloads\stumbl-website.zip contains the marketing homepage,
+  styles, script, and assets only. Historical nested website files likewise
+  contain marketing pages, not another public event-detail route.
+- No mobile application code was edited or used as an implementation source.
+
+ROUTES AND PRIVACY
+- /events/:id -> /api/event?id=:id.
+- /invite/:token -> /api/event?invite=:token.
+- api/invite.js delegates to the same event handler; invite/token query aliases
+  and legacy invite share URLs are supported.
+- Public lookup uses the anon key, an explicit visibility=eq.public filter,
+  and existing Supabase access controls. No service key is used to read events.
+- Invite lookup calls get_event_invite_preview; an event ID supplied alongside
+  an invite must match the returned event. Invalid/unavailable links show a
+  generic preview. These controls were not changed.
+- Private image previews validate the invite before existing banner resolution.
+- Both public and invite pages render api/_preview.js. There is no user-agent
+  branch, alternate rich event component, or browser-specific event asset bundle.
+- App action remains stumbl://events/<id>, with invite preserved when present.
+  Universal/app links continue to be controlled by the existing .well-known
+  manifests and native association behavior. Physical-device app opening was
+  not tested in this session.
+
+FEATURE REVIEW
+Feature                         Before investigation / current local change
+Cover, title, date/time          Already present; unchanged
+Full description                Previously social metadata only; now visible
+                                for public, non-invite event pages
+Location and address            Not selected/normalized/rendered
+Map or directions               Not implemented in this website event page
+Organizer                       Not selected/normalized/rendered
+Tickets                         Not selected/normalized/rendered
+Recurring dates                 Not selected/normalized/rendered
+Open installed app              Existing custom-scheme button; unchanged
+Install options                 No event-page App Store/Play Store fallback
+Mobile layout                   Existing viewport and fluid card; unchanged
+Social-sharing previews         Existing OG/Twitter tags and invite image proxy
+
+LOCAL FIX
+- api/_preview.js: display the already-fetched public description below the
+  date, HTML-escaped, with preserved line breaks and long-word wrapping.
+- Require visibility=public and no invite token to add visible description.
+  Private/invite previews and generic fallbacks gain no visible details.
+- tests/event-sharing.test.mjs: cover escaping, empty descriptions, private
+  previews, public lookup filters, invalid tokens/IDs, invite mismatch, aliases,
+  legacy links, social metadata, no-store, and existing route mappings.
+- No database schema/query, route, native deep link, manifest, or unrelated
+  website file was changed by this fix.
+- This is a small confirmed omission fix, not restoration of a full event page.
+
+PRODUCTION AND HOSTING
+- Public responses identify Vercel. Apex redirects to www.
+- Latest GitHub Production deployment: 7613369505, created Nov 6, 2026,
+  SHA c10a907e1f28c5e3a901be0a1ea9dd6a02af30ed.
+- Its status is success, reported by vercel[bot], with deployment URL
+  https://stumblevents-26pmavz1o-stumbl1.vercel.app.
+- Deployment records:
+  https://api.github.com/repos/StumblEvents/Stumblevents.com/deployments
+  https://api.github.com/repos/StumblEvents/Stumblevents.com/deployments/7613369505/statuses
+- main is the evidenced production source branch. README also documents
+  automatic Vercel deployment from main. Dashboard settings were not accessible.
+- Live homepage and delete-account HTML match committed HEAD byte-for-byte.
+  Live generic event and invalid-invite HTML matched the original local renderer
+  byte-for-byte before the fix. Desktop and iPad user agents returned the same
+  generic event HTML. Responses had Cache-Control:no-store and X-Vercel-Cache:MISS.
+- Thus production is consistent with latest committed code; no evidence of a
+  missed expanded-page deployment or stale event CDN content was found.
+- Authenticated CLI inspection failed because the saved Vercel token is invalid.
+  The exact currently aliased deployment ID could not be independently verified.
+- Follow-up exact-event verification:
+  https://www.stumblevents.com/events/5aa7e358-0268-42f4-b6ea-9671aa9bf560
+  returned 200 and the Alicia's Baby Shower card shown in the screenshot.
+  Desktop and iPad user agents returned identical HTML, no-store, and Vercel
+  cache MISS. The custom-scheme link retains the correct event ID. This URL
+  has no invite token; actual invite behavior remains covered by mocked tests.
+- Its social description contains only the date/time. With the current
+  renderer this is consistent with an empty/missing returned event description.
+  The local description fix therefore may not visibly change this particular
+  event. The database record itself was not independently queried; no private
+  events were enumerated or production data changed.
+
+CHECKS
+- node --test tests/*.test.mjs: 28 passed, 0 failed.
+- node scripts/test-well-known-routing.mjs: passed.
+- node scripts/test-stripe-connect-handoff.mjs: passed.
+- git diff --check -- api/_preview.js: passed.
+- Configured buildCommand is node scripts/generate-well-known.mjs;
+  outputDirectory is '.'. Ran this command successfully with identifiers and
+  fingerprints read from live public association files and output redirected
+  to an isolated temporary directory. Both generated manifests parsed as JSON.
+- The routing test also exercises generation with isolated fixture settings.
+- Full Vercel platform function packaging/build and deployment preview remain
+  unverified; valid Vercel authentication/project settings are required.
+- Live /support, /delete-account, /email-verified, and both www association files
+  returned 200. Live /privacy, /terms, /creator-agreement returned 404.
+  Their local replacements belong to pre-existing uncommitted legal work.
+
+DEPLOYMENT RISKS AND EXACT NEXT STEPS (NOT EXECUTED)
+1. Review this limited description fix and supply the actual shared event URL
+   for read-only verification. If the full remembered page is required, locate
+   its original source/design before choosing a new implementation. A push of
+   today's main alone cannot restore the missing features listed above.
+2. Preserve the existing dirty legal/minor-request/routing work. Do not use
+   git add . or deploy the entire working directory without reviewing it.
+   This task added only api/_preview.js, tests/event-sharing.test.mjs, and this
+   report. An event-only commit can explicitly stage those three paths:
+     Set-Location 'C:\Stumbl Website'
+     git add -- api/_preview.js tests/event-sharing.test.mjs EVENT-SHARING-INVESTIGATION.txt
+     git diff --cached
+     git commit -m "Show descriptions on public event share pages"
+   Check existing staged changes first. No commit was made during this task.
+3. Reauthenticate Vercel (vercel login), and use a clean checkout of the reviewed
+   commit for platform validation. Link to the EXISTING Stumbl Vercel project:
+     vercel link
+     vercel pull --yes --environment=production
+     vercel build --prod
+   The CLI was found in the local npm cache, not on PATH. Install/use a reviewed
+   CLI version or invoke the existing vercel.cmd by absolute path. The current
+   dashboard Production Branch and environment variables must be verified.
+4. Existing required settings: SUPABASE_URL, SUPABASE_ANON_KEY; image signing
+   additionally uses SUPABASE_SERVICE_ROLE_KEY. Build requires APPLE_TEAM_ID,
+   APPLE_DEV_TEAM_ID, ANDROID_SHA256_CERT_FINGERPRINTS, and
+   ANDROID_DEV_SHA256_CERT_FINGERPRINTS. Keep credentials out of source/output.
+   Production settings were not pulled or printed during this task.
+5. Only after separate deployment authorization, push the reviewed commit:
+     git push origin main
+   The existing Git integration should build/deploy it automatically. A push to
+   main is a production-changing action. Do not run it just to share code for
+   review. GitHub Pages records also exist, but the live custom domain is Vercel.
+6. Verify Vercel reports the intended commit Ready, then inspect the live URL
+   and actual event HTML. Confirm public description and social tags, legacy
+   invites, expired/mismatched invites, installed-app opening, browser-only
+   viewing, both-host association URLs, legal routes, support, account deletion,
+   email verification, and Stripe return/refresh routes. Do not infer success
+   solely from a Git push or deployment status.
+7. Retain c10a907 as the known committed baseline for Vercel rollback if needed.
+
+This event fix leaves existing routes/associations intact. It does not repair
+the production legal 404s or publish the unrelated legal drafts. Deploying those
+changes together would expand scope and requires their own completed review.
+
+Vercel build and Git deployment references:
+https://vercel.com/docs/cli/build
+https://vercel.com/docs/git/vercel-for-github

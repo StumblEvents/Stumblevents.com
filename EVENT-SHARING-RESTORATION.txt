@@ -1,0 +1,171 @@
+PREDEPLOYMENT UPDATE: See PREDEPLOYMENT.txt for final build/configuration status.
+The Windows packaging error was resolved; final packaging uses .website-output
+instead of the repository root. The older build limitation and output-directory
+instructions below are retained as historical findings and are superseded.
+
+Stumbl expanded event-sharing restoration — November 20, 2026
+
+STATUS
+Restored locally in C:\Stumbl Website. Nothing committed, pushed, or deployed.
+No Computer Use, GUI automation, desktop control, or browser interaction used.
+Production was accessed only through catalog queries in read-only transactions
+and the existing read-only event-preview RPC. No analytics actions were sent.
+
+RECOVERY AND PROVENANCE
+Original implementation: C:\Stumbl App, commit
+94ff6b970751ab4a6e484d53344aff4d31e6c575 (October 13).
+Complete original website staging source:
+C:\Temp\stumbl-website-calendar-preview
+
+Isolated backup:
+C:\Stumbl Website\.recovery\event-sharing-20261120-1795208549651
+- website-before: website state including uncommitted legal work before changes.
+- original-staging: recovered complete staging source, without credentials/.vercel.
+- commit-94ff6b9: original committed event handlers, tests, and migrations.
+- manifest.json: SHA-256 inventory of the website/staging backup files.
+- database-verification.json: current read-only catalog evidence.
+
+Restored website handlers come from app checkpoint 0d10387, which retains the
+original implementation and its later committed social-preview and token
+handling fixes. This recovers the existing design; it is not a new page design.
+The native application repository and original staging source were not edited.
+
+RESTORED FEATURES
+- Original navy event page, banner, title, creator/verification, category pills,
+  full description, schedule, location, map, parking, and directions.
+- Showing selection for events with multiple scheduled occurrences.
+- Apple/other calendar imports through .ics download, Google Calendar, Outlook.
+- Separate server-only Calendar Interest analytics, using the existing RPC.
+- Initial-page secure cookie seeding; one browser ID across apex/www and provider
+  actions; database deduplication per event/showing/browser, separate from RSVP.
+- Public pages and token-authorized private invitations; noindex/no-store.
+- Private tokens omitted from .ics content and external calendar-provider URLs.
+- Existing HTTPS app handoff, preserving event/invite/development parameters.
+- Original Download Stumbl section, showing real store links only when configured.
+- Social metadata and branded PNG/JPEG fallback assets.
+
+INTEGRATION CHANGES
+Added:
+  api/_event-preview.js       Recovered renderer and secure preview RPC client
+  api/_event-page.js          Recovered link-preview page handler, renamed helper
+  api/_calendar-interest.js   Recovered cookie implementation
+  api/_share-link-config.js   Recovered app/web URL handling
+  api/_share-preview-utils.js Recovered social-image handling
+  api/calendar.js            Recovered calendar endpoint
+  stumbl-share-preview.jpg and stumbl-share-preview.png
+  .gitignore                 Excludes .recovery from Git
+  .vercelignore              Excludes backups, credentials, tests, reports/drafts
+  tests/recovered-event-sharing.test.mjs
+  scripts/verify-event-sharing-database.sql (catalog-only verification)
+  EVENT-SHARING-RESTORATION.txt
+Updated:
+  api/event.js               Compatibility adapter for current event routes
+  api/invite.js              Recovered invite handler plus existing query aliases
+  vercel.json                Added historical /event/:id alias only
+  scripts/local-preview.mjs  Executes recovered endpoints; hides recovery/source
+  tests/event-sharing.test.mjs
+  tests/email-verification.test.mjs (expected route list adds /event/:id)
+  EVENT-SHARING-INVESTIGATION.txt (marks earlier limited finding superseded)
+
+Small integration corrections:
+- Reject RPC responses with mismatched IDs, unsupported visibility, or private
+  visibility without an invite in addition to database authorization checks.
+- Preserve legacy token/invite/invite_token and id/event API aliases.
+- Default the optional unavailable-page preview value to null for type checking.
+- Missing coordinates use address-based directions instead of a zero-coordinate
+  map. Existing valid coordinates retain original behavior.
+
+PRESERVATION
+The current homepage, support, legal content/rendering, minor-request pages,
+email verification, Stripe callbacks, and generated app-link associations were
+not replaced. Protected homepage/legal files were compared byte-for-byte with
+the backup. Existing rewrite entries, headers, and redirects are unchanged.
+Only /event/:id was added to the rewrite list.
+
+api/link-preview.js remains the existing image proxy. Renaming the recovered
+page handler to _event-page.js avoids breaking old image-preview URLs.
+The earlier api/_preview.js description-only edit was preserved as found; event
+routes now use the recovered renderer instead. No unrelated changes were reset.
+
+DATABASE READINESS — CONFIRMED CURRENT, READ-ONLY
+Supabase project: ndfwnylpwrutbvhheesl.
+Used the installed Supabase CLI with db query --remote=<ref> --read-only.
+- Migration 20261012090000 is recorded as applied.
+- Migration 20261012173000 is recorded as applied.
+- get_event_web_preview(uuid,text) exists; anon/authenticated can execute.
+- track_web_calendar_interest(uuid,uuid,text,uuid,text) exists; anon and
+  authenticated cannot execute; service_role can execute.
+- Both functions pin search_path and validate existing hashed invitation tokens.
+- The calendar-interest unique index exists on event_id, coalesced instance_id,
+  tracking_id, restricted to calendar_interest records.
+- The event-type constraint includes calendar_interest.
+- The calendar function inserts into event_analytics_events, references no
+  event_attendees, and leaves attendance/RSVP separate.
+No database migration is required for this restoration.
+No production analytics write was executed to test deduplication.
+
+VALIDATION
+- node --test tests/*.test.mjs: 32 passed, 0 failed. The recovered suite contains
+  additional assertions for all providers, private-token stripping, refreshing,
+  five repeated calendar actions, cookie flags, separate showings, and sparse data.
+- node scripts/test-well-known-routing.mjs: passed.
+- node scripts/test-stripe-connect-handoff.mjs: passed.
+- TypeScript checkJs/noEmit on the eight recovered/integration JS modules: passed.
+  Used the app's existing tsc executable and Node types read-only; no dependency
+  installation or native source modification was required.
+- Configured production build command generate-well-known.mjs: passed using
+  public live association identifiers, with output isolated in .recovery.
+- All twelve Vercel-detected API function entrypoints compiled/bundled with
+  esbuild for Node 24 successfully, including existing ESM endpoints and new CJS.
+- Function inventory: 12, at the existing Hobby ceiling. Do not add endpoints
+  casually; all new shared helpers use underscore-prefixed names.
+- Actual Alicia's Baby Shower event rendered through the restored local handler
+  using the production read-only preview RPC: HTTP 200, location, calendar, and
+  full layout present. That event currently has no description in its payload.
+- A local HTTP integration test verifies event rendering, .ics, and hidden
+  recovery/API-source paths without a browser or production writes.
+- Applicable diff whitespace checks passed.
+
+BUILD LIMITATION
+Full `vercel build --prod` was attempted only in .recovery/platform-build, using
+local project settings and public association configuration. The local Vercel
+CLI fails with `spawn cmd.exe ENOENT`. Restored source typechecks and bundles,
+and the configured build command passes, but full Vercel packaging is not yet
+validated. The isolated build directory is diagnostic output, NOT a release.
+No deployment was attempted. Do not deploy diagnostic/prebuilt artifacts.
+
+BEFORE DEPLOYMENT
+1. Review the event restoration together with the pre-existing uncommitted legal
+   work. Keep those changes intact and explicitly decide which files to release.
+   Do not use `git add .` or push main as a review-only step: it auto-deploys.
+2. Verify the existing Vercel project remains stumbl1/stumblevents-com, linked to
+   StumblEvents/Stumblevents.com main, with root output '.' and the current build
+   command. Preserve current routes and association configuration.
+3. Verify Production has SUPABASE_URL, SUPABASE_ANON_KEY, and the server-only
+   SUPABASE_SERVICE_ROLE_KEY. The service key is needed for calendar analytics
+   and signed banners; missing it permits calendar files but skips tracking.
+   No Vercel secrets were pulled or copied during restoration.
+4. Keep APPLE_TEAM_ID, APPLE_DEV_TEAM_ID, ANDROID_SHA256_CERT_FINGERPRINTS,
+   ANDROID_DEV_SHA256_CERT_FINGERPRINTS and existing Stripe configuration intact.
+   Use only verified real URLs for STUMBL_APP_STORE_URL/STUMBL_GOOGLE_PLAY_URL.
+5. On a clean reviewed website checkout, complete an authenticated Vercel build.
+   The saved CLI token was previously invalid. Any interactive sign-in must be
+   completed manually by the user. Typical terminal steps, NOT run here:
+     vercel login
+     vercel link                 (select EXISTING stumbl1/stumblevents-com)
+     vercel pull --yes --environment=production
+     vercel build --prod
+   Resolve the Windows CLI spawn failure or run the packaging check in a
+   suitable Linux build environment. A Preview deployment also requires separate
+   approval, as does any push/deployment. Do not assume Preview has Production
+   secrets or that promoting an old deployment preserves new website/legal work.
+6. After approval and a successful build, deploy the reviewed WEBSITE source
+   through its existing workflow. Never deploy the app repository, old staging
+   package, or .recovery directory over the newer website.
+7. Verify live public/private links, private calendar authorization, selected
+   showings, cookies/analytics (writes only with approval), installed-app handoff
+   on physical devices, store links, legal routes, AASA/assetlinks on both hosts,
+   support, deletion, email verification, and Stripe callbacks.
+
+No GUI action is required to review these local changes. If dashboard-only
+verification is needed, the user must perform it manually.

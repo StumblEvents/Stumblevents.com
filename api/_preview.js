@@ -180,6 +180,9 @@ export function renderEventPreview({
     imageUrl,
     shareUrl,
     dateTime,
+    bodyDescription: !inviteToken && event.visibility === "public"
+      ? event.description || ""
+      : "",
     ctaHref,
     ctaText: "Open in Stumbl",
   });
@@ -192,6 +195,7 @@ function renderHtml({
   imageUrl,
   shareUrl,
   dateTime = "",
+  bodyDescription = "",
   ctaHref,
   ctaText,
 }) {
@@ -201,6 +205,7 @@ function renderHtml({
   const safeImageUrl = escapeHtml(imageUrl || STUMBL_LOGO_URL);
   const safeShareUrl = escapeHtml(shareUrl || SITE_URL);
   const safeDateTime = escapeHtml(dateTime);
+  const safeBodyDescription = escapeHtml(bodyDescription);
   const safeCtaHref = escapeHtml(ctaHref || SITE_URL);
   const safeCtaText = escapeHtml(ctaText || "Open Stumbl");
 
@@ -294,6 +299,13 @@ function renderHtml({
       font-weight: 700;
       font-size: 17px;
     }
+
+    .description {
+      margin: 0 0 30px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
   </style>
 </head>
 
@@ -307,6 +319,8 @@ function renderHtml({
       <h1>${safeTitle}</h1>
 
       ${safeDateTime ? `<p class="date">${safeDateTime}</p>` : ""}
+
+      ${safeBodyDescription ? `<p class="description">${safeBodyDescription}</p>` : ""}
 
       <a class="button" href="${safeCtaHref}">
         ${safeCtaText}

@@ -1,0 +1,12 @@
+.git
+.vercel
+.recovery
+.website-output
+.env*
+tests
+scripts/verify-event-sharing-database.sql
+EVENT-SHARING-INVESTIGATION.txt
+EVENT-SHARING-RESTORATION.txt
+PREDEPLOYMENT.txt
+stumbl-legal-drafts-*.zip
+README.txt

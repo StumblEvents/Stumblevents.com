@@ -226,6 +226,11 @@ test("email verification page uses stable asset URLs and responsive, image-free 
   assert.match(css, /\.open-button\[hidden\] \{ display: none; \}/);
   assert.equal(vercel.rewrites.some((rule) => rule.source.startsWith("/email-verified")), false);
   assert.deepEqual(vercel.rewrites.map((rule) => rule.source), [
+    "/minor-purchase",
+    "/minor-promotion",
+    "/privacy",
+    "/terms",
+    "/creator-agreement",
     "/delete-account",
     "/support",
     "/support/",
@@ -234,6 +239,7 @@ test("email verification page uses stable asset URLs and responsive, image-free 
     "/creator/stripe/development/return",
     "/creator/stripe/development/refresh",
     "/invite/:token",
+    "/event/:id",
     "/events/:id",
   ]);
 });

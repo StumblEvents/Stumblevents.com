@@ -29,6 +29,8 @@ function aasa({ teamId, developmentTeamId }) {
           components: [
             { "/": "/events/*", "?": { app: "development" } },
             { "/": "/invite/*", "?": { app: "development" } },
+            { "/": "/minor-purchase", "?": { app: "development" } },
+            { "/": "/minor-promotion", "?": { app: "development" } },
             { "/": "/creator/stripe/development/return" },
             { "/": "/creator/stripe/development/refresh" },
           ],
@@ -38,6 +40,8 @@ function aasa({ teamId, developmentTeamId }) {
           components: [
             { "/": "/events/*" },
             { "/": "/invite/*" },
+            { "/": "/minor-purchase" },
+            { "/": "/minor-promotion" },
             { "/": "/creator/stripe/return" },
             { "/": "/creator/stripe/refresh" },
           ],

@@ -34,8 +34,8 @@ try {
   );
   const vercel = JSON.parse(await fs.readFile(path.join(root, "vercel.json"), "utf8"));
 
-  assert.equal(vercel.buildCommand, "node scripts/generate-well-known.mjs");
-  assert.equal(vercel.outputDirectory, ".");
+  assert.equal(vercel.buildCommand, "node scripts/build-website.mjs");
+  assert.equal(vercel.outputDirectory, ".website-output");
   assert(!vercel.rewrites.some((rule) => rule.source.startsWith("/.well-known/")));
   assert(vercel.headers.some((rule) => rule.source === "/.well-known/apple-app-site-association"));
   assert(vercel.headers.some((rule) => rule.source === "/.well-known/assetlinks.json"));
@@ -54,16 +54,32 @@ try {
   assert.deepEqual(development, [
     "/events/*",
     "/invite/*",
+    "/minor-purchase",
+    "/minor-promotion",
     "/creator/stripe/development/return",
     "/creator/stripe/development/refresh",
   ]);
   assert.deepEqual(production, [
     "/events/*",
     "/invite/*",
+    "/minor-purchase",
+    "/minor-promotion",
     "/creator/stripe/return",
     "/creator/stripe/refresh",
   ]);
   assert.equal(staticAasa.applinks.details.length, 2);
+  assert.deepEqual(staticAasa.applinks.details.map((detail) => detail.appIDs), [
+    ["KKF26CHCH6.com.stumbl.community.dev"],
+    ["KKF26CHCH6.com.stumbl.community"],
+  ]);
+  assert.deepEqual(details[0].components.slice(2, 4), [
+    { "/": "/minor-purchase", "?": { app: "development" } },
+    { "/": "/minor-promotion", "?": { app: "development" } },
+  ]);
+  assert.deepEqual(details[1].components.slice(2, 4), [
+    { "/": "/minor-purchase" },
+    { "/": "/minor-promotion" },
+  ]);
   assert.deepEqual(assetLinks.map((entry) => entry.target.package_name), [
     "com.stumbl.community",
     "com.stumbl.community.dev",

@@ -1,6 +1,6 @@
 {
-  "buildCommand": "node scripts/generate-well-known.mjs",
-  "outputDirectory": ".",
+  "buildCommand": "node scripts/build-website.mjs",
+  "outputDirectory": ".website-output",
   "headers": [
     {
       "source": "/.well-known/apple-app-site-association",
@@ -36,6 +36,48 @@
           "value": "nosniff"
         }
       ]
+    },
+    {
+      "source": "/minor-purchase",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive, nosnippet"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/minor-promotion",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive, nosnippet"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
     }
   ],
   "redirects": [
@@ -45,7 +87,7 @@
       "permanent": false
     },
     {
-      "source": "/:path((?!\\.well-known/assetlinks\\.json$)(?!\\.well-known/apple-app-site-association$).*)",
+      "source": "/:path((?!\\.well-known/assetlinks\\.json$)(?!\\.well-known/apple-app-site-association$)(?!minor-purchase/)(?!minor-promotion/).*)",
       "has": [
         {
           "type": "host",
@@ -57,6 +99,26 @@
     }
   ],
   "rewrites": [
+    {
+      "source": "/minor-purchase",
+      "destination": "/minor-purchase/index.html"
+    },
+    {
+      "source": "/minor-promotion",
+      "destination": "/minor-promotion/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/legal/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/legal/index.html"
+    },
+    {
+      "source": "/creator-agreement",
+      "destination": "/legal/index.html"
+    },
     {
       "source": "/delete-account",
       "destination": "/delete-account/index.html"
@@ -88,6 +150,10 @@
     {
       "source": "/invite/:token",
       "destination": "/api/event?invite=:token"
+    },
+    {
+      "source": "/event/:id",
+      "destination": "/api/event?id=:id"
     },
     {
       "source": "/events/:id",
