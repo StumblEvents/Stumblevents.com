@@ -1,5 +1,5 @@
 export const SITE_URL = "https://www.stumblevents.com";
-export const STUMBL_LOGO_PATH = "/assets/icon.png";
+export const STUMBL_LOGO_PATH = "/assets/stumbl-wordmark.png?v=20261120";
 export const STUMBL_LOGO_URL = `${SITE_URL}${STUMBL_LOGO_PATH}`;
 export const EVENT_IMAGE_BUCKET = "event-images";
 

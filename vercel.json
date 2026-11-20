@@ -82,6 +82,16 @@
   ],
   "redirects": [
     {
+      "source": "/stumbl-share-preview.jpg",
+      "destination": "/assets/stumbl-wordmark.png?v=20261120",
+      "permanent": false
+    },
+    {
+      "source": "/stumbl-share-preview.png",
+      "destination": "/assets/stumbl-wordmark.png?v=20261120",
+      "permanent": false
+    },
+    {
       "source": "/beta",
       "destination": "/#notify",
       "permanent": false

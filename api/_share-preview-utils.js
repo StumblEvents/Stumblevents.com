@@ -1,5 +1,5 @@
 const DEFAULT_SIGNED_IMAGE_TTL_SECONDS = 60 * 60 * 24 * 30;
-const DEFAULT_SHARE_FALLBACK_IMAGE_PATH = '/stumbl-share-preview.jpg';
+const DEFAULT_SHARE_FALLBACK_IMAGE_PATH = '/assets/stumbl-wordmark.png?v=20261120';
 const DEFAULT_SHARE_IMAGE_WIDTH = 1200;
 const DEFAULT_SHARE_IMAGE_HEIGHT = 630;
 
@@ -20,26 +20,25 @@ function absoluteUrl(baseUrl, path) {
   }
 }
 
-function canonicalStumblAssetUrl(value) {
+function canonicalStumblAssetUrl(value, baseUrl) {
   const url = safeHttpsUrl(value);
   if (!url) return '';
   try {
     const parsed = new URL(url);
     const host = parsed.hostname.toLowerCase();
     if ((host === 'stumblevents.com' || host === 'www.stumblevents.com') && ['/stumbl-share-preview.png', '/stumbl-share-preview.jpg'].includes(parsed.pathname)) {
-      parsed.hostname = 'www.stumblevents.com';
-      return parsed.toString();
+      return absoluteUrl(baseUrl || 'https://www.stumblevents.com', DEFAULT_SHARE_FALLBACK_IMAGE_PATH);
     }
   } catch {}
   return url;
 }
 
 function resolveShareFallbackImageUrl(baseUrl) {
-  return canonicalStumblAssetUrl(process.env.EXPO_PUBLIC_SHARE_FALLBACK_IMAGE_URL)
-    || canonicalStumblAssetUrl(process.env.STUMBL_SHARE_FALLBACK_IMAGE_URL)
-    || canonicalStumblAssetUrl(process.env.EXPO_PUBLIC_PRIVATE_INVITE_IMAGE_URL)
-    || canonicalStumblAssetUrl(process.env.STUMBL_PRIVATE_INVITE_IMAGE_URL)
-    || canonicalStumblAssetUrl(absoluteUrl(baseUrl, DEFAULT_SHARE_FALLBACK_IMAGE_PATH));
+  return canonicalStumblAssetUrl(process.env.EXPO_PUBLIC_SHARE_FALLBACK_IMAGE_URL, baseUrl)
+    || canonicalStumblAssetUrl(process.env.STUMBL_SHARE_FALLBACK_IMAGE_URL, baseUrl)
+    || canonicalStumblAssetUrl(process.env.EXPO_PUBLIC_PRIVATE_INVITE_IMAGE_URL, baseUrl)
+    || canonicalStumblAssetUrl(process.env.STUMBL_PRIVATE_INVITE_IMAGE_URL, baseUrl)
+    || canonicalStumblAssetUrl(absoluteUrl(baseUrl, DEFAULT_SHARE_FALLBACK_IMAGE_PATH), baseUrl);
 }
 
 function publicStorageImageUrl(supabaseUrl, bucket, path) {
@@ -115,8 +114,29 @@ async function resolveEventPreviewImageUrl({
   imageUrl,
   fallbackImageUrl,
   context,
+  visibility = 'private',
 }) {
-  const signedBannerUrl = await signedStorageImageUrl(supabaseUrl, bucket, bannerImagePath, serviceRoleKey, context);
+  let signedBannerUrl = '';
+  try {
+    signedBannerUrl = await signedStorageImageUrl(supabaseUrl, bucket, bannerImagePath, serviceRoleKey, context);
+  } catch {
+    // Image-service outages must not hide the authorized event page.
+  }
+  if (signedBannerUrl) return signedBannerUrl;
+  // Only an already-authorized public event may use this anonymous fallback.
+  // Probe only our configured storage origin, never an arbitrary remote URL.
+  if (visibility === 'public' && bannerImagePath) {
+    const candidate = publicStorageImageUrl(supabaseUrl, bucket, bannerImagePath);
+    try {
+      if (new URL(candidate).origin === new URL(supabaseUrl).origin
+          && new URL(candidate).pathname.startsWith('/storage/v1/object/public/')) {
+        const response = await fetch(candidate, { method: 'HEAD', redirect: 'error', signal: AbortSignal.timeout(5000) });
+        if (response.ok && response.headers.get('content-type')?.toLowerCase().startsWith('image/')) return candidate;
+      }
+    } catch {
+      // Missing/inaccessible banners continue to the safe fallback below.
+    }
+  }
   const publicBannerUrl = storageBucketIsPublic(bucket)
     ? publicStorageImageUrl(supabaseUrl, bucket, bannerImagePath)
     : '';
@@ -144,8 +164,8 @@ function shareImageMetadata(imageUrl) {
     url,
     secureUrl: url,
     type: imageContentTypeForUrl(url),
-    width: DEFAULT_SHARE_IMAGE_WIDTH,
-    height: DEFAULT_SHARE_IMAGE_HEIGHT,
+    width: new URL(url).pathname === '/assets/stumbl-wordmark.png' ? 653 : DEFAULT_SHARE_IMAGE_WIDTH,
+    height: new URL(url).pathname === '/assets/stumbl-wordmark.png' ? 309 : DEFAULT_SHARE_IMAGE_HEIGHT,
   };
 }
 

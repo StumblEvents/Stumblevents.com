@@ -66,8 +66,8 @@ assert.match(publicPreview.body, /property="og:description" content="Sat, Oct 10
 assert.match(publicPreview.body, /property="og:type" content="website"/, 'server HTML marks the preview as a website');
 assert.match(publicPreview.body, /property="og:site_name" content="Stumbl"/, 'server HTML identifies Stumbl as the site');
 assert.match(publicPreview.body, /name="twitter:card" content="summary_large_image"/, 'server HTML requests a large social image card');
-assert.match(publicPreview.body, /property="og:image" content="https:\/\/www\.stumblevents\.com\/stumbl-share-preview\.jpg"/, 'events without a usable banner receive the branded absolute HTTPS fallback');
-assert.match(publicPreview.body, /property="og:image:type" content="image\/jpeg"/, 'server HTML declares the fallback image MIME type');
+assert.match(publicPreview.body, /property="og:image" content="https:\/\/www\.stumblevents\.com\/assets\/stumbl-wordmark\.png\?v=20261120"/, 'events without a usable banner receive the branded absolute HTTPS fallback');
+assert.match(publicPreview.body, /property="og:image:type" content="image\/png"/, 'server HTML declares the fallback image MIME type');
 assert.equal(publicPreview.body.includes(`href="https://stumblevents.com/events/${eventId}"`), true, 'explicit app handoff uses the alternate associated host');
 assert.equal(publicPreview.headers['cache-control'], 'private, no-store');
 assert.equal(publicPreview.headers['referrer-policy'], 'same-origin', 'preview does not leak invitation URLs as external referrers');
