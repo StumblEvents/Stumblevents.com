@@ -32,7 +32,7 @@ assert.equal(fallbackForPrivateBanner, 'https://www.stumblevents.com/stumbl-shar
 const publicEvent = {
   id: eventId, visibility: 'public', title: 'Neighborhood Festival', description: 'Food, music, and local makers.',
   start_time: '2026-10-10T23:00:00Z', end_time: '2026-10-11T01:00:00Z', timezone: 'America/Denver',
-  category_name: 'Party', subcategory_name: 'Community', display_pills: ['Family friendly'],
+  category_name: 'Party', subcategory_name: 'Community', custom_category_label: 'Family friendly', display_pills: ['category', 'subcategory', 'custom'],
   venue_name: 'Pioneer Park', address: '100 Main St', city: 'Provo', state: 'UT', zip: '84601', latitude: 40.2338, longitude: -111.6585,
   parking_notes: 'Free parking is available on the north side.', is_paid: true, ticket_sales_enabled: true,
   creator: { display_name: 'Stumbl Events', is_verified: true },
@@ -83,7 +83,7 @@ const classificationAndAddressPreview = await render(linkPreview, { type: 'event
   ...publicEvent,
   category_name: 'category',
   subcategory_name: 'subcategory',
-  display_pills: ['Family friendly', 'family friendly', 'Display pills', ''],
+  custom_category_label: 'Family friendly', display_pills: ['custom', 'custom', 'Display pills', ''],
   address: '123 Main St, West Jordan, UT 84088', city: 'West Jordan', state: 'UT', zip: '84088',
 });
 assert.equal(classificationAndAddressPreview.body.includes('>subcategory<'), false, 'placeholder classification values are never rendered as category pills');

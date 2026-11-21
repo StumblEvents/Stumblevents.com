@@ -1,0 +1,110 @@
+UPDATE: The one-field RPC migration 20261121034357 was applied with authorization.
+It adds only custom_category_label; all existing fields and permissions remain
+unchanged. Transactional rehearsal, before/after field comparisons, and post-
+migration public/private checks passed. The earlier backend blocker below is
+resolved for Baby Shower. Other proposed response fields were NOT deployed.
+See supabase/migrations/20261121034357_web_preview_custom_category_label.sql
+and supabase/tests/web_preview_custom_category_label.sql for the applied change
+and read-only regression assertions. Website publication is authorized separately
+in the current task and will be verified against the resulting production commit.
+
+Calendar address and event pill fixes — original investigation
+
+Address cause and resolution
+api/calendar.js independently concatenated venue/address/city/state/ZIP even
+when address already contained the locality. All calendar providers now share
+api/_calendar-location.js. It retains complete addresses, appends only missing
+structured components, preserves country text, groups state/ZIP, and avoids
+substring matches such as UT inside Utah Street. Maps/directions keep their
+existing formatter and coordinates; their behavior was not changed.
+
+Pill cause and resolution
+The native app's App.tsx getAvailableEventDisplayPills/resolveEventDisplayPills
+treat display_pills as selected keys. category/subcategory/more/custom map to
+category_name/subcategory_name/sub_subcategory_name/custom_category_label.
+Null selects smart defaults; an explicit empty list hides classification pills.
+The old website incorrectly printed the parent classifications plus raw keys.
+api/_event-pills.js now resolves keys and appends the native-style price label.
+It preserves selected custom label casing and does not infer free pricing from
+empty ticket types or null summaries. The native application was read-only.
+
+Read-only verification of Alicia's event
+- Stored custom_category_label is Baby Shower.
+- Stored display_pills is ["custom"].
+- Stored is_paid is false.
+- The complete stored/RPC address is:
+  234 N Ashford Dr, North Salt Lake, UT 84054, United States
+- Current get_event_web_preview includes display_pills/is_paid/address but
+  omits custom_category_label and the additional category/price fields below.
+
+IMPORTANT: backend approval required
+The current RPC cannot produce Baby Shower from its existing response. The
+website deliberately does NOT query tables separately, bypass private invite
+authorization, infer the label from the title, or hardcode an event ID.
+With today's response the corrected pills are Free only. With the verified
+stored label included in the response they are exactly Baby Shower · Free.
+The calendar address fix is complete without backend changes.
+
+Smallest proposed backend change — NOT APPLIED
+In the existing public.get_event_web_preview(uuid,text) function's authorized
+jsonb_build_object result, add:
+
+  'custom_category_label', v_event.custom_category_label,
+
+That one field unblocks Alicia's selected Baby Shower pill. For accurate native
+parity across other category levels and paid-event summaries, also return:
+
+  'sub_subcategory_name', v_event.sub_subcategory_name,
+  'ticket_price_min_cents', v_event.ticket_price_min_cents,
+  'ticket_price_max_cents', v_event.ticket_price_max_cents,
+  'ticket_price', v_event.ticket_price,
+  'price_varies', v_event.price_varies,
+
+These columns were confirmed to exist via read-only schema inspection.
+Also replace the current display_pills JSON expression:
+
+  'display_pills', coalesce(v_event.display_pills, '[]'::jsonb),
+
+with:
+
+  'display_pills', v_event.display_pills,
+
+This preserves the native distinction between NULL defaults and explicit [].
+Keep every existing private-invite token, deleted/moderated-event, public
+visibility, creator/ticket scope, search_path, and execution-grant restriction.
+Do not apply a replacement function from an old migration or broaden grants.
+This is a response-field change; no event data or table schema change is needed.
+An approved backend implementation should have its own migration and validation
+before website deployment. No SQL changes or migration were created/applied here.
+
+Existing recurring-showing selection and saving remain unchanged. The frontend
+can resolve normalized recurrence/multi_day pill keys if the RPC supplies those
+values in a future approved change; it does not guess omitted recurrence rules.
+
+Changed implementation/test files
+- api/_calendar-location.js (new)
+- api/_event-pills.js (new)
+- api/calendar.js
+- api/_event-preview.js (pill mapping only)
+- tests/calendar-location.test.mjs (new)
+- tests/event-pills.test.mjs (new)
+- tests/recovered-event-sharing.test.mjs (fixtures use persisted keys)
+
+No banner, logo, layout/style, legal, map/directions, deep-link, invite-token,
+analytics, or calendar scheduling code was changed. No push/deployment performed.
+
+Validation completed
+- All 47 website tests pass, including address and pill regression tests.
+- JavaScript TypeScript checkJs/noEmit passes, including both new helpers.
+- Universal/app-link routing and Stripe handoff checks pass.
+- Full Vercel production-target packaging passes: 44 public assets and 12 API
+  functions, with no private build artifacts in static output.
+- Using the actual saved RPC payload and mocked provider dependencies, ICS,
+  Google, and Outlook all produced the exact expected Alicia calendar location.
+  No calendar analytics were written and no production calendar endpoint called.
+- The actual RPC payload produces Free only because the custom label is absent.
+  Adding the independently verified stored custom label to a local test payload
+  produces exactly Baby Shower and Free. This is not a live RPC verification
+  of the missing field; that backend change remains unapproved and unapplied.
+- Changes remain local and uncommitted. The combined release is not ready until
+  the missing backend fields are approved, implemented, and verified separately.

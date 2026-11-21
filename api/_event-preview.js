@@ -1,5 +1,6 @@
 const APP_NAME = 'Stumbl';
 const EVENT_IMAGE_BUCKET = 'event-images';
+const { eventPillLabels } = require('./_event-pills');
 const { resolveEventPreviewImageUrl, resolveShareFallbackImageUrl, shareImageMetadata } = require('./_share-preview-utils');
 
 function escapeHtml(value) {
@@ -193,7 +194,7 @@ function genuineClassificationValues(values) {
 }
 
 function chips(values) {
-  return genuineClassificationValues(values).map((value) => `<span class="chip">${escapeHtml(value)}</span>`).join('');
+  return values.map((value) => `<span class="chip">${escapeHtml(value)}</span>`).join('');
 }
 
 function renderEventPreview({ preview = null, canonicalUrl, noindex = false, userAgent = '' }) {
@@ -205,7 +206,7 @@ function renderEventPreview({ preview = null, canonicalUrl, noindex = false, use
   const image = preview?.banner_url || fallbackImage;
   const imageMeta = shareImageMetadata(image);
   const creator = preview?.creator || {};
-  const categories = genuineClassificationValues([preview?.category_name, preview?.subcategory_name, ...(preview?.display_pills || [])]);
+  const categories = preview ? eventPillLabels(preview) : [];
   const handoff = appHandoffUrl(canonicalUrl);
   const maps = preview ? directionsUrl(preview) : '';
   const mapEmbed = preview ? mapEmbedUrl(preview) : '';

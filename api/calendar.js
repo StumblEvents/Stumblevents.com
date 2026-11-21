@@ -1,5 +1,6 @@
 const { fetchEventPreview } = require('./_event-preview');
 const { visitorTrackingId } = require('./_calendar-interest');
+const { calendarLocation } = require('./_calendar-location');
 
 function escapeIcs(value) {
   return String(value || '').replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/,/g, '\\,').replace(/;/g, '\\;');
@@ -12,7 +13,7 @@ function utcIcsDate(value) {
 }
 
 function eventLocation(preview) {
-  return [preview.venue_name, preview.address, [preview.city, preview.state].filter(Boolean).join(', '), preview.zip].filter(Boolean).join(', ');
+  return calendarLocation(preview);
 }
 
 function selectedOccurrence(preview, occurrenceId) {

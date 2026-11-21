@@ -3,3 +3,4 @@
 .vercel/
 .env*
 stumbl-legal-drafts-*.zip
+/supabase/.temp/
