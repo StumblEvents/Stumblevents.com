@@ -3,10 +3,10 @@ import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { createLocalPreviewServer } from "../scripts/local-preview.mjs";
 
-const approvedRoutes = ["/terms", "/privacy", "/creator-agreement"];
-const inactiveRoutes = ["/seller-agreement", "/refund-policy"];
+const approvedRoutes = ["/terms", "/privacy", "/creator-agreement", "/seller-agreement"];
+const inactiveRoutes = ["/refund-policy"];
 
-test("Support and website footers link to the three review-ready agreements", async () => {
+test("Support and website footers link to the four published agreements", async () => {
   const [support, landing, legal] = await Promise.all([
     readFile("support/index.html", "utf8"),
     readFile("index.html", "utf8"),
@@ -23,7 +23,7 @@ test("Support and website footers link to the three review-ready agreements", as
   assert.match(support, /href="\/delete-account"/);
 });
 
-test("only the three review-ready agreements have public website routes", async () => {
+test("only the four published agreements have public website routes", async () => {
   const vercel = JSON.parse(await readFile("vercel.json", "utf8"));
   for (const route of approvedRoutes) {
     assert(vercel.rewrites.some((rewrite) => rewrite.source === route && rewrite.destination === "/legal/index.html"));
@@ -33,12 +33,12 @@ test("only the three review-ready agreements have public website routes", async 
   }
 });
 
-test("website legal content includes only the three review-ready agreements", async () => {
+test("website legal content includes only the four published agreements", async () => {
   const source = await readFile("legal/legal-content.js", "utf8");
   assert.match(source, /"terms"/);
   assert.match(source, /"privacy"/);
   assert.match(source, /"creator-agreement"/);
-  assert.doesNotMatch(source, /"seller-agreement"/);
+  assert.match(source, /"seller-agreement"/);
   assert.doesNotMatch(source, /"refund-policy"/);
 });
 test("public account deletion request page is routed and self-contained", async () => {

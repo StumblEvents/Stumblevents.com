@@ -130,6 +130,10 @@
       "destination": "/legal/index.html"
     },
     {
+      "source": "/seller-agreement",
+      "destination": "/legal/index.html"
+    },
+    {
       "source": "/delete-account",
       "destination": "/delete-account/index.html"
     },

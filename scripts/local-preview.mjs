@@ -29,7 +29,7 @@ function localFileForPathname(pathname) {
   if (pathname === "/delete-account" || pathname === "/delete-account/" || pathname === "/delete-account/index.html") {
     return "delete-account/index.html";
   }
-  if (["/privacy", "/terms", "/creator-agreement"].includes(pathname)) {
+  if (["/privacy", "/terms", "/creator-agreement", "/seller-agreement"].includes(pathname)) {
     return "legal/index.html";
   }
   if (pathname === "/minor-purchase") return "minor-purchase/index.html";
