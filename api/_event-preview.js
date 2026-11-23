@@ -168,15 +168,15 @@ async function fetchEventPreview({ eventId, inviteToken, baseUrl }) {
 }
 
 function downloadLinks(userAgent = '') {
-  const appStore = String(process.env.STUMBL_APP_STORE_URL || '').trim();
+  const appStore = 'https://apps.apple.com/us/app/stumbl-events/id6792025434';
   const playStore = String(process.env.STUMBL_GOOGLE_PLAY_URL || '').trim();
   const mobile = /android|iphone|ipad|ipod/i.test(userAgent);
   const ios = /iphone|ipad|ipod/i.test(userAgent);
   const android = /android/i.test(userAgent);
-  if (ios) return appStore ? [{ label: 'Get Stumbl — Free', url: appStore }] : [];
+  if (ios) return appStore ? [{ label: 'Download Stumbl — iOS', url: appStore }] : [];
   if (android) return playStore ? [{ label: 'Get Stumbl — Free', url: playStore }] : [];
   if (mobile) return [];
-  return [appStore && { label: 'Download on the App Store', url: appStore }, playStore && { label: 'Get it on Google Play', url: playStore }].filter(Boolean);
+  return [appStore && { label: 'Download Stumbl — iOS', url: appStore }, playStore && { label: 'Get it on Google Play', url: playStore }].filter(Boolean);
 }
 
 function genuineClassificationValues(values) {
