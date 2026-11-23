@@ -1334,3 +1334,38 @@ footer nav {
 
   .inner-header nav a { text-underline-offset: 5px; }
 }
+
+/* Homepage App Store card; shared visual treatment with event previews. */
+.homepage-app-card {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid #24334d;
+  border-radius: 22px;
+  background: #0a0f1d;
+  color: #fff;
+}
+.homepage-app-icon { display: block; width: 64px; height: 64px; border-radius: 14px; object-fit: cover; }
+.homepage-app-details { min-width: 0; }
+.homepage-app-name { display: block; font-size: 21px; font-weight: 800; line-height: 1.3; }
+.homepage-app-publisher { display: block; margin-top: 5px; color: #aab7c7; font-size: 14px; line-height: 1.4; overflow-wrap: anywhere; }
+.homepage-download-link {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: #087f75;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+}
+.homepage-download-link:hover { background: #096b64; }
+.homepage-download-link:focus-visible { outline: 3px solid #8ee8dc; outline-offset: 4px; }
