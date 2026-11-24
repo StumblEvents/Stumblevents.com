@@ -17,6 +17,7 @@ const mimeTypes = {
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
+  ".svg": "image/svg+xml",
   ".jpg": "image/jpeg",
   ".webmanifest": "application/manifest+json; charset=utf-8",
 };
@@ -29,7 +30,7 @@ function localFileForPathname(pathname) {
   if (pathname === "/delete-account" || pathname === "/delete-account/" || pathname === "/delete-account/index.html") {
     return "delete-account/index.html";
   }
-  if (["/privacy", "/terms", "/creator-agreement"].includes(pathname)) {
+  if (["/privacy", "/terms", "/creator-agreement", "/seller-agreement"].includes(pathname)) {
     return "legal/index.html";
   }
   if (pathname === "/minor-purchase") return "minor-purchase/index.html";

@@ -24,7 +24,7 @@ function defaultLinkTarget() {
 }
 
 function linkTargetFromRequest(req) {
-  return normalizeLinkTarget(req?.query?.app || req?.query?.target || req?.query?.env || defaultLinkTarget().environment);
+  return normalizeLinkTarget(req?.query?.app || req?.query?.target || req?.query?.env || 'production');
 }
 
 function stumblRequestBaseUrl(req) {

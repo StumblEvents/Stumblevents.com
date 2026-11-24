@@ -1,0 +1,237 @@
+{
+  "checkedAt": "2026-11-23T17:48:42.425Z",
+  "checks": [
+    {
+      "url": "https://stumblevents.com/.well-known/apple-app-site-association",
+      "status": 200,
+      "contentType": "application/json",
+      "redirect": null,
+      "body": {
+        "applinks": {
+          "apps": [],
+          "details": [
+            {
+              "appIDs": [
+                "KKF26CHCH6.com.stumbl.community.dev"
+              ],
+              "components": [
+                {
+                  "/": "/events/*",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/invite/*",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/minor-purchase",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/minor-promotion",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/creator/stripe/development/return"
+                },
+                {
+                  "/": "/creator/stripe/development/refresh"
+                }
+              ]
+            },
+            {
+              "appIDs": [
+                "KKF26CHCH6.com.stumbl.community"
+              ],
+              "components": [
+                {
+                  "/": "/events/*"
+                },
+                {
+                  "/": "/invite/*"
+                },
+                {
+                  "/": "/minor-purchase"
+                },
+                {
+                  "/": "/minor-promotion"
+                },
+                {
+                  "/": "/creator/stripe/return"
+                },
+                {
+                  "/": "/creator/stripe/refresh"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://stumblevents.com/.well-known/assetlinks.json",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "redirect": null,
+      "body": [
+        {
+          "relation": [
+            "delegate_permission/common.handle_all_urls"
+          ],
+          "target": {
+            "namespace": "android_app",
+            "package_name": "com.stumbl.community",
+            "sha256_cert_fingerprints": [
+              "B7:B0:72:87:42:20:E9:0D:09:34:AE:0C:E8:36:4C:21:D7:A0:1F:B9:E4:1B:61:6C:69:A9:F9:01:ED:E2:80:9A"
+            ]
+          }
+        },
+        {
+          "relation": [
+            "delegate_permission/common.handle_all_urls"
+          ],
+          "target": {
+            "namespace": "android_app",
+            "package_name": "com.stumbl.community.dev",
+            "sha256_cert_fingerprints": [
+              "73:04:6F:86:40:71:13:11:2C:DC:84:31:80:0A:A1:E8:9E:DD:EF:96:03:FE:75:D9:16:8E:61:72:20:A1:9E:75"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://www.stumblevents.com/.well-known/apple-app-site-association",
+      "status": 200,
+      "contentType": "application/json",
+      "redirect": null,
+      "body": {
+        "applinks": {
+          "apps": [],
+          "details": [
+            {
+              "appIDs": [
+                "KKF26CHCH6.com.stumbl.community.dev"
+              ],
+              "components": [
+                {
+                  "/": "/events/*",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/invite/*",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/minor-purchase",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/minor-promotion",
+                  "?": {
+                    "app": "development"
+                  }
+                },
+                {
+                  "/": "/creator/stripe/development/return"
+                },
+                {
+                  "/": "/creator/stripe/development/refresh"
+                }
+              ]
+            },
+            {
+              "appIDs": [
+                "KKF26CHCH6.com.stumbl.community"
+              ],
+              "components": [
+                {
+                  "/": "/events/*"
+                },
+                {
+                  "/": "/invite/*"
+                },
+                {
+                  "/": "/minor-purchase"
+                },
+                {
+                  "/": "/minor-promotion"
+                },
+                {
+                  "/": "/creator/stripe/return"
+                },
+                {
+                  "/": "/creator/stripe/refresh"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "url": "https://www.stumblevents.com/.well-known/assetlinks.json",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "redirect": null,
+      "body": [
+        {
+          "relation": [
+            "delegate_permission/common.handle_all_urls"
+          ],
+          "target": {
+            "namespace": "android_app",
+            "package_name": "com.stumbl.community",
+            "sha256_cert_fingerprints": [
+              "B7:B0:72:87:42:20:E9:0D:09:34:AE:0C:E8:36:4C:21:D7:A0:1F:B9:E4:1B:61:6C:69:A9:F9:01:ED:E2:80:9A"
+            ]
+          }
+        },
+        {
+          "relation": [
+            "delegate_permission/common.handle_all_urls"
+          ],
+          "target": {
+            "namespace": "android_app",
+            "package_name": "com.stumbl.community.dev",
+            "sha256_cert_fingerprints": [
+              "73:04:6F:86:40:71:13:11:2C:DC:84:31:80:0A:A1:E8:9E:DD:EF:96:03:FE:75:D9:16:8E:61:72:20:A1:9E:75"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://itunes.apple.com/lookup?id=6792025434&country=us",
+      "status": 200,
+      "resultCount": 1,
+      "app": {
+        "trackId": 6792025434,
+        "bundleId": "com.stumbl.community",
+        "trackName": "Stumbl Events",
+        "version": "1.0",
+        "releaseDate": "2026-11-23T08:00:00Z",
+        "sellerName": "Stumbl Events, LLC"
+      }
+    },
+    {
+      "url": "https://play.google.com/store/apps/details?id=com.stumbl.community",
+      "status": 404,
+      "redirect": null
+    }
+  ]
+}

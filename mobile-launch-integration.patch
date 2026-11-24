@@ -1,0 +1,37 @@
+diff --git a/lib/eventSharing.ts b/lib/eventSharing.ts
+index 39b3b1d..38fb928 100644
+--- a/lib/eventSharing.ts
++++ b/lib/eventSharing.ts
+@@ -142,9 +142,12 @@ export function parseStumblIncomingLink(rawUrl: string): StumblIncomingLink | nu
+   const customSchemeParts = parsed.hostname
+     ? [parsed.hostname, ...parsed.pathname.split('/')]
+     : parsed.pathname.split('/');
+-  const parts = (isWebLink ? webParts : customSchemeParts)
+-    .map((part) => decodeURIComponent(part).trim())
+-    .filter(Boolean);
++  let parts: string[];
++  try {
++    parts = (isWebLink ? webParts : customSchemeParts)
++      .map((part) => decodeURIComponent(part).trim()).filter(Boolean);
++  } catch { return null; }
++  if (parts.length !== 2) return null;
+   const [route, value] = parts;
+   if (!route || !value) return null;
+   const inviteToken = parsed.searchParams.get('invite') || parsed.searchParams.get('token') || parsed.searchParams.get('invite_token') || undefined;
+diff --git a/scripts/test-deep-links.mjs b/scripts/test-deep-links.mjs
+index 6b6ddbb..cbf7b96 100644
+--- a/scripts/test-deep-links.mjs
++++ b/scripts/test-deep-links.mjs
+@@ -40,6 +40,12 @@ const expected = { type: 'event', eventId };
+ // starts the app and when a browser falls back to the custom scheme.
+ assert.deepEqual(plain(parseStumblIncomingLink(`https://stumblevents.com/events/${eventId}`)), expected);
+ assert.deepEqual(plain(parseStumblIncomingLink(`https://www.stumblevents.com/events/${eventId}`)), expected);
++assert.deepEqual(plain(parseStumblIncomingLink(`https://www.stumblevents.com/event/${eventId}`)), expected);
++assert.equal(parseStumblIncomingLink('https://stumblevents.com/events/%E0%A4%A'), null, 'malformed percent encoding must not crash the link listener');
++assert.equal(parseStumblIncomingLink(`https://stumblevents.com/events/${eventId}/unexpected`), null, 'extra route segments are not event URLs');
++assert.equal(parseStumblIncomingLink(`https://untrusted.example/events/${eventId}`), null);
++assert.equal(parseStumblIncomingLink('https://stumblevents.com/events/not-an-id'), null);
++
+ assert.deepEqual(plain(parseStumblIncomingLink(`stumbl://events/${eventId}`)), expected);
+ assert.deepEqual(plain(parseStumblIncomingLink(`stumbl://invite/private-token_123`)), { type: 'invite', token: 'private-token_123' });
+ 

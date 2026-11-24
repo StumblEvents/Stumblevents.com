@@ -1,0 +1,222 @@
+WEBSITE LAUNCH INTEGRATION COMPLETION REPORT
+Stumbl public launch | November 23, 2026 | America/Denver
+
+STATUS: IMPLEMENTED LOCALLY; OWNER VERIFICATION PENDING — NOT COMPLETE
+
+Website branch: codex/website-launch-integration (created from existing main).
+Website base: ca522e8. Repository: C:\Stumbl Website
+Mobile working branch: codex/native-liquid-glass-expo-router; base 9940bdb.
+Mobile repository: C:\Stumbl App
+No commits, pushes, deployments, OTA updates, native builds, database changes,
+or Edge Function deployments were performed. No GUI or devices were controlled.
+The historical release-candidate worktree was not modified.
+
+IMPLEMENTATION PROMPT
+Preserve existing changes and event URLs; add the verified iOS download badge
+to the homepage and event footer; retain the authorized preview RPC; add event
+status, timezone, recurrence, sharing and return-after-install guidance; keep
+ordinary public links on production; validate association output; hide
+unverified Android downloads; test locally and document manual device checks.
+Do not change payment/legal gates, deploy backend changes, build, publish,
+commit, push or deploy.
+
+DELIVERED
+1. Official App Store badge in the homepage hero and download section, linking
+   to https://apps.apple.com/us/app/stumbl-events/id6792025434.
+   Updated launch copy and existing newsletter messaging; kept the signup flow.
+   Preserved the site's branding and responsive grid. Added SVG MIME support
+   to the existing terminal-driven local preview server.
+2. Official App Store badge at the bottom of event pages, including unavailable
+   event fallbacks. Android visitors receive honest availability messaging.
+   Official Google Play badge asset prepared but not displayed or linked.
+   Store URLs are reviewable constants in api/_app-downloads.js; an unverified
+   environment variable cannot publish a different store link.
+3. Preserved event title/image, description, organizer, venue/directions/map,
+   schedule/showing selection and calendar actions. Added explicit timezone,
+   upcoming/current/past state and showing-count information. Attendance text
+   describes free/paid admission without displaying ticket inventory or adding
+   a purchase path. No payment, ticket eligibility or boosting gates changed.
+4. Added native Share API, clipboard fallback, and selectable HTTPS URL fallback.
+   The link remains usable with JavaScript disabled. Kept Open in Stumbl as an
+   explicit HTTPS link to the associated apex host. No automatic store redirects,
+   timers, install detection, custom-scheme redirects or repeated prompts added.
+5. Added canonical link metadata; retained server-rendered Open Graph/Twitter
+   title, description and event image metadata for public events. Authorized
+   private invitation bodies remain functional, but their social title,
+   description and image are generic and noindex is enforced. Unknown/deleted/
+   unauthorized events expose generic unavailable content and noindex.
+6. Preserved /events/:id, /event/:id, /invite/:token and existing API/token aliases.
+   Invalid event-ID syntax now returns 404 before a backend request. Normal
+   website requests default to production even if deployment env targets Dev.
+   Explicit existing development invitation/link parameters remain supported.
+7. Retained the anonymous get_event_web_preview RPC as the authorization boundary.
+   The checked-in function filters deleted/unapproved events and validates private
+   invite hashes, expiry, revocation and usage limits. No unrestricted event-table
+   fallback added. Additional lifecycle fields, if returned by a newer RPC, are
+   rejected when they indicate blocked/removed/restricted/unpublished content.
+   No attendee information or new sensitive-location source was introduced.
+8. Added production /event/* to Apple association output alongside /events/*.
+   Preserved explicit iOS development query matching and financial callbacks.
+   Android output delegates only to production after signing verification;
+   removed broad development-package delegation from the prepared output.
+   Without ANDROID_APP_LINKS_VERIFIED=true it emits [] and safely stays on web.
+   With that flag, valid ANDROID_SHA256_CERT_FINGERPRINTS are required.
+   Development Android app-link callbacks will also fall back to the web with
+   this production-only manifest. This is an intentional, reviewable tradeoff;
+   a dedicated development domain would require separately authorized work.
+9. Mobile parser now safely rejects malformed percent encoding and extra path
+   segments. Added regression cases for malformed IDs, untrusted hosts and the
+   legacy singular event route. Existing cold/warm-start and auth-restoration
+   queueing logic was retained.
+10. Added focused launch tests and updated old assertions that expected arbitrary
+    environment-provided store URLs. Saved mobile-launch-integration.patch so
+    the two mobile-file changes can be reviewed independently of other app work.
+
+LIVE READ-ONLY VERIFICATION
+Evidence: LAUNCH-INTEGRATION-LIVE-VERIFICATION.json (timestamped HTTP results).
+- Apple lookup API: HTTP 200, resultCount 1, track ID 6792025434,
+  bundle com.stumbl.community, Stumbl Events, seller Stumbl Events, LLC.
+  Public listing version 1.0; release date November 23, 2026.
+- Both apex and www serve AASA and assetlinks.json directly with HTTP 200,
+  JSON content types and no redirect. No deployed files were changed.
+- Live AASA production identifier: KKF26CHCH6.com.stumbl.community.
+  Team KKF26CHCH6 is corroborated by the app wallet source. This does NOT
+  establish the signed entitlements of the actual App Store binary.
+- app.config.js already declares both associated domains, production bundle
+  and scheme stumbl, and autoVerify Android event/invite intent filters.
+  The app has both initial-URL and running-URL listeners plus event-ID retention.
+- Live Android manifest currently includes production AND development packages.
+  Its published production SHA-256 fingerprint is recorded in the evidence file.
+  Its presence on the website is NOT proof that it is the Play signing key.
+- Candidate Play listing returned HTTP 404:
+  https://play.google.com/store/apps/details?id=com.stumbl.community
+  Android download remains hidden. No identifier or certificate was invented.
+
+LOCAL VALIDATION
+- Focused website suite: 34/34 passed. Includes event rendering, escaping,
+  public/private/unknown/mismatched IDs, calendar/invitation compatibility,
+  metadata, store gating, share/copy/error/cancel behavior, local asset HTTP
+  delivery, malformed IDs, lifecycle restrictions and generated associations.
+- Full website suite: 58/59 passed. Sole failure:
+  tests/email-verification.test.mjs:228 expects the old exact rewrite list and
+  omits /seller-agreement. That route and related legal edits were present
+  before this task. This task did not alter vercel.json or the failing test.
+  Retained the existing legal work and reported the stale assertion.
+- Mobile: node scripts/test-deep-links.mjs — passed.
+- Mobile: node scripts/test-event-sharing.mjs — passed.
+- Local build: APPLE_TEAM_ID=KKF26CHCH6 node scripts/build-website.mjs — passed.
+  Output .website-output includes both badges, event-page.js and manifests.
+  No Android verified flag was supplied; local Android association output is [].
+- git diff --check — passed for website and this task's two mobile files.
+- Mobile/desktop layout received source checks (existing responsive grid,
+  bounded badges, wrapping text, one-column mobile layout). Visual rendering,
+  actual social-app cards and installed-device navigation were NOT verified.
+- Database privacy verification was source review plus mocked handler tests;
+  no production database queries, writes or test fixtures were deployed.
+
+REMAINING REQUIREMENTS / RELEASE NOTES
+A. User must run the device checklist below. Local tests cannot prove the
+   installed App Store binary's navigation or signed associated-domain rights.
+   Verify application-identifier KKF26CHCH6.com.stumbl.community and entitlement
+   entries applinks:stumblevents.com and applinks:www.stumblevents.com from the
+   approved build's signed entitlements. If absent, an owner-authorized native
+   rebuild and store release are required. No native config change was needed
+   based on the current source configuration.
+B. Android: owner must compare the production fingerprint in the evidence file
+   with Play Console's APP SIGNING certificate, not merely an upload/debug key.
+   Only then set ANDROID_APP_LINKS_VERIFIED=true and the verified production
+   fingerprint(s) for the website build. Confirm native package/filter/signing
+   match. A mismatch requires an owner-authorized native build/release or a
+   corrected website certificate configuration, as appropriate. Ordinary links
+   cannot be promised to open Android while this verification is pending.
+C. Verify a public production Play listing before enabling GOOGLE_PLAY_URL and
+   adding the prepared badge to the homepage. The current candidate is 404.
+D. Cancellation limitation: the existing preview RPC returns only scheduled
+   instances and omits event cancellation/lifecycle status and recurrence rules.
+   The renderer handles explicit canceled fields if supplied, but cannot reliably
+   label a canceled event from this RPC today. It describes multiple scheduled
+   showings without inventing recurrence rules. Complete cancellation support
+   needs a separately reviewed backend contract change; none was prepared or
+   deployed here. Reconfirm deployed RPC authorization before public sign-off.
+E. This mobile parser fix is local JavaScript source. Delivering it requires an
+   owner-authorized app release/update; neither an OTA nor a native build was
+   initiated. It does not itself change entitlements or intent filters.
+F. Existing /event/:id links still work on the web and parse in the app. Current
+   Android native filters claim /events, not singular /event. Full OS-level
+   Android verification of the legacy singular alias would require an additional
+   /event/ production intent filter and an owner-authorized native build. The
+   primary sharing route remains /events/:id, so no new build was initiated.
+G. Review and approve the website diff before any commit/push/deployment.
+   Local changes are not yet live. Device validation of the new site behavior
+   needs an owner-approved HTTPS deployment on the associated domain; localhost
+   cannot prove Universal/App Links. Apple/CDN/browser caches may delay changes.
+H. Resolve the unrelated stale route-list test before declaring the entire
+   website suite green. Manual visual and social-preview validation remain open.
+
+MANUAL DEVICE-TEST CHECKLIST (USER PERFORMS)
+Use two real public events A and B, one past event, one recurring event, an
+unknown/deleted ID and an event you know is private/restricted/unpublished.
+Record device OS, installed app version/build, exact URL, result and time.
+Use the production app; also check that Stumbl Dev never receives ordinary links.
+
+[ ] iPhone, installed, app closed: tap A from Messages or Notes. Confirm the
+    correct title and ID open in Stumbl. Repeat while app is running; then tap B
+    and confirm stale event A does not remain selected. Repeat signed in/out.
+[ ] Repeat public A on both https://stumblevents.com/events/<A-ID> and
+    https://www.stumblevents.com/events/<A-ID>. Test the legacy /event/<A-ID>
+    alias separately and record any platform-specific limitation.
+[ ] iPhone without Stumbl: link shows the event, timezone, venue, organizer,
+    description and bottom App Store badge. Badge opens the confirmed listing.
+    After installing, return to the original message/page and tap A again.
+    Expect no automatic navigation after installation.
+[ ] Android, installed production-signed app: after certificate verification and
+    owner-approved association deployment, tap A/B in a message with the app
+    closed/running. Confirm exact event, package and verified link handling.
+    Until then, a working web fallback is the expected safe behavior.
+[ ] Android without app: event remains usable on web; no broken Play badge,
+    automatic store redirect or installation promise. Calendar/share still work.
+[ ] Safari/Chrome mobile: inspect at narrow widths and portrait/landscape.
+    Check no horizontal overflow, readable text, uncropped image and tappable
+    badge/share/calendar controls. Choose to stay on web and confirm no prompts.
+[ ] Messaging/social in-app browsers: try Messages, WhatsApp and a social app.
+    If the embedded browser suppresses app opening, follow its Open in Browser
+    action, then Open in Stumbl. Confirm the web page always remains useful.
+[ ] Desktop: homepage badges and event page, maps, calendar, share/copy and
+    selectable URL work. Store badge works; no forced mobile navigation.
+[ ] Recurring/past/canceled cases: confirm date/time/timezone and all showings.
+    Confirm known cancellation behavior against limitation D before sign-off.
+[ ] Unknown/deleted/private-without-token/restricted/unpublished links: confirm
+    unavailable view with no event title, image, location or organizer disclosed.
+    Authorized private invitation still opens its event; expired/revoked tokens
+    do not. Never post private invitation tokens into public preview tools.
+[ ] Share a PUBLIC event in Messages/WhatsApp/social app: verify title,
+    description, actual banner and URL. Old cached cards may need a fresh share.
+    Authorized private invitation social card must remain generic.
+[ ] Verify installed app's domain entitlement and production signing certificate
+    as described above. Confirm live AASA/assetlinks remain direct JSON on both
+    hosts after any approved deployment. Confirm no production Dev interception.
+
+PRESERVED EXISTING WORK
+Website already had modified index/footer legal links, legal/index.html,
+legal/legal-content.js, scripts/local-preview.mjs, scripts/sync-legal-docs.mjs,
+support/index.html, tests/legal-routing.test.mjs, vercel.json and untracked
+legal/seller-agreement.md. All were preserved. This task changed only the launch
+parts of index.html and added SVG MIME handling in local-preview.mjs.
+The mobile repo also has extensive unrelated pending work; only lib/eventSharing.ts
+and scripts/test-deep-links.mjs were changed by this task. Its branch was not
+switched and no historical worktrees were modified.
+
+AUTHORITATIVE REFERENCES
+https://developer.apple.com/documentation/xcode/supporting-associated-domains
+https://developer.apple.com/documentation/xcode/allowing-apps-and-websites-to-link-to-your-content
+https://developer.android.com/training/app-links/configure-assetlinks
+https://developer.android.com/training/app-links/troubleshoot
+https://itunes.apple.com/lookup?id=6792025434&country=us
+
+MASTER TRACKER SUMMARY
+Local website/app launch integration prepared and tested. iOS downloads enabled
+in source; Android download hidden. Public sharing, safe fallbacks and metadata
+improved; mobile parser hardened. Local build passes; focused suites pass;
+full suite has one pre-existing stale assertion. Awaiting owner-approved release
+review, device checks, signed entitlement/certificate confirmation, and resolution
+of the existing RPC cancellation limitation. Do not mark COMPLETE yet.

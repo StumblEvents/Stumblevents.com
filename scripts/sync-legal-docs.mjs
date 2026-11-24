@@ -9,7 +9,8 @@ if (!sourceDirectory) {
 const documents = {
   privacy: 'privacy.md',
   terms: 'terms.md',
-  'creator-agreement': 'creator-agreement.md'
+  'creator-agreement': 'creator-agreement.md',
+  'seller-agreement': 'seller-agreement.md'
 };
 
 const contents = Object.fromEntries(await Promise.all(

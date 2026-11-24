@@ -16,7 +16,7 @@ await mkdir(output, { recursive: true });
 
 const publicFiles = [
   'index.html', 'about.html', 'about.css', 'script.js', 'styles.css',
-  'favicon.ico', 'site.webmanifest', 'stumbl-share-preview.jpg', 'stumbl-share-preview.png',
+  'event-page.js', 'favicon.ico', 'site.webmanifest', 'stumbl-share-preview.jpg', 'stumbl-share-preview.png',
   'assets', 'support', 'delete-account', 'email-verified', 'legal',
   'minor-purchase', 'minor-promotion',
 ];

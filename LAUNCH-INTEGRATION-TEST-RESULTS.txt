@@ -1,0 +1,97 @@
+✔ Windows child builds retain one populated PATH without changing the parent (1.2251ms)
+✔ complete, partial, structured, international, and missing calendar addresses normalize without duplication (2.4463ms)
+✔ ICS, Google, and Outlook use the same normalized location without changing coordinates (43.4741ms)
+✔ verifies a fresh TokenHash with Supabase's email confirmation type (33.7015ms)
+✔ rejects expired, reused, and Supabase-invalid TokenHashes without success (4.4707ms)
+✔ rejects malformed hashes and unrelated previously-verified sessions (2.886ms)
+✔ returns a retryable failure when Supabase is unavailable (2.4699ms)
+✔ automatically verifies a TokenHash and removes it from browser history (2.1017ms)
+✔ page displays an accurate failed-verification result and does not offer the app button (1.4818ms)
+✔ page only starts automatic verification once when initialization is repeated (2.9068ms)
+✖ email verification page uses stable asset URLs and responsive, image-free page styling (4.7989ms)
+✔ public flyer is verified anonymously and used without a signing key or bucket override (27.4616ms)
+✔ missing, non-image, and unreachable public flyers fall back safely (1.1709ms)
+✔ private flyers without a signing key are neither probed nor exposed (0.2634ms)
+✔ a signing outage still permits the verified public flyer (0.5362ms)
+✔ legacy branded fallback overrides resolve to the current wordmark on Preview (0.3009ms)
+✔ hero uses the event image without cropping and recovers once on a browser image error (24.4514ms)
+✔ bannerless events use the current official website wordmark and correct social dimensions (10.0343ms)
+✔ selected custom category and explicit free status match the native full event popup (35.469ms)
+✔ display keys map to stored labels, preserve custom casing, and do not expose unknown keys (0.5161ms)
+✔ missing custom RPC data never falls back to raw Party, Other, or custom (0.2033ms)
+✔ free and paid labels honor explicit pricing, catalog summaries, and legacy paid rules (3.7858ms)
+✔ recurrence pills honor selected keys while multiple-showing selection stays independent (0.3177ms)
+✔ public details are escaped and app handoff retains the shared event (26.6537ms)
+✔ legacy token aliases preserve private calendar authorization (4.8846ms)
+✔ missing, unauthorized, and mismatched events disclose no event details (3.5062ms)
+✔ existing image-preview API remains a fetch handler (0.095ms)
+✔ events without coordinates use their address instead of a zero-coordinate map (0.8559ms)
+✔ serverless entrypoints remain within the existing twelve-function limit (4.2645ms)
+✔ local HTTP routes execute the restored handlers and hide recovery snapshots (25.0508ms)
+✔ legal and legacy shared routes are retained and recovery files excluded (1.5874ms)
+✔ favicon derivatives have the requested dimensions and a multi-size ICO fallback (31.6619ms)
+✔ public pages use versioned new favicon declarations instead of the prior icon (4.9575ms)
+✔ manifest and generated public pages reference the website favicon set (2.1468ms)
+✔ production downloads work without env vars and reject unverified store overrides (19.8661ms)
+✔ homepage and every event fallback include production downloads and return instructions (5.1501ms)
+✔ event status uses future showings, end times, and explicit cancellation (0.2492ms)
+✔ timezone, recurrence, share controls and canonical metadata render without an app (1.6958ms)
+✔ private social metadata contains no private title, description or banner (0.7931ms)
+✔ public default never inherits a development deployment target (0.149ms)
+✔ lifecycle restrictions fail closed before banner resolution (4.523ms)
+✔ generated association files permit production iOS and gate Android signing (123.1758ms)
+✔ share uses native share, clipboard and selection fallback without navigation (2.7164ms)
+✔ malformed event IDs return a safe 404 without a backend lookup (0.9713ms)
+✔ download assets and share script are served with working local MIME types (24.3839ms)
+✔ Support and website footers link to the approved agreements (3.9758ms)
+✔ only the approved agreements have public website routes (0.9884ms)
+✔ website legal content includes only the approved agreements (1.195ms)
+✔ public account deletion request page is routed and self-contained (1.1736ms)
+✔ local preview resolves the public account deletion URL (36.7763ms)
+✔ local preview resolves each review-ready agreement (13.8394ms)
+✔ sensitive minor-request fallbacks reveal no request or payment details (7.6641ms)
+✔ shared navigation headers use the accessible Stumbl wordmark without changing their home links (6.6303ms)
+✔ shared navigation wordmark preserves its full responsive aspect ratio (1.622ms)
+Recovered website event-sharing tests passed
+✔ tests\recovered-event-sharing.test.mjs (129.0348ms)
+✔ support URLs explicitly render the existing support page (3.9241ms)
+✔ legacy beta URLs continue to reach launch updates (1.1159ms)
+✔ local preview renders Support HTML and never directory indexes (37.402ms)
+✔ reviewed RPC migration adds only the custom label to the captured live function (3.8106ms)
+ℹ tests 59
+ℹ suites 0
+ℹ pass 58
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 350.9726
+
+✖ failing tests:
+
+test at tests\email-verification.test.mjs:205:1
+✖ email verification page uses stable asset URLs and responsive, image-free page styling (4.7989ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      '/minor-purchase',
+      '/minor-promotion',
+      '/privacy',
+      '/terms',
+  ...
+      '/events/:id',
+  +   '/seller-agreement'
+    ]
+  
+      at TestContext.<anonymous> (file:///C:/Stumbl%20Website/tests/email-verification.test.mjs:228:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ '/minor-purchase', '/minor-promotion', '/privacy', '/terms', '/creator-agreement', '/delete-account', '/support', '/support/', '/creator/stripe/return', '/creator/stripe/refresh', '/creator/stripe/development/return', '/creator/stripe/development/refresh', '/invite/:token', '/event/:id', '/events/:id', '/seller-agreement' ],
+    expected: [ '/minor-purchase', '/minor-promotion', '/privacy', '/terms', '/creator-agreement', '/delete-account', '/support', '/support/', '/creator/stripe/return', '/creator/stripe/refresh', '/creator/stripe/development/return', '/creator/stripe/development/refresh', '/invite/:token', '/event/:id', '/events/:id' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

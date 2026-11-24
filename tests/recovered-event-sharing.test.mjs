@@ -59,7 +59,7 @@ assert.equal(publicPreview.statusCode, 200);
 for (const detail of ['Neighborhood Festival', 'Food, music, and local makers.', 'Pioneer Park', 'Free parking is available', 'Live music', 'Stumbl Events', 'Verified', 'About this event', 'Location details', 'Get Directions', 'Save to Calendar', 'Calendar Interest', 'Download Stumbl']) assert.equal(publicPreview.body.includes(detail), true, `public preview renders ${detail}`);
 assert.equal(publicPreview.body.includes('Good to know'), false, 'preview does not invent an extra information section');
 assert.equal(publicPreview.body.includes('General admission'), false, 'ticket inventory is not exposed as an unnecessary preview section');
-assert.equal(publicPreview.body.includes('https://store.example.test/stumbl-ios'), true, 'iOS receives its configured store CTA');
+assert.equal(publicPreview.body.includes('https://apps.apple.com/us/app/stumbl-events/id6792025434'), true, 'iOS receives the verified production store CTA');
 assert.equal(publicPreview.body.includes('stumbl://'), false, 'browser preview never redirects to a custom URL scheme');
 assert.match(publicPreview.body, /property="og:title" content="Neighborhood Festival"/, 'server HTML includes the event title for crawlers');
 assert.match(publicPreview.body, /property="og:description" content="Sat, Oct 10, 5:00 PM – Oct 10, 7:00 PM · Food, music, and local makers\."/, 'server HTML includes date/time and a concise description for crawlers');
@@ -110,7 +110,7 @@ assert.equal(unavailable.body.includes('Neighborhood Festival'), false, 'unautho
 
 const desktopPreview = await render(linkPreview, { type: 'event', id: eventId }, publicEvent, 'Mozilla/5.0 (X11; Linux x86_64)');
 assert.equal(desktopPreview.body.includes('Download on the App Store'), true, 'desktop shows the configured App Store option');
-assert.equal(desktopPreview.body.includes('Get it on Google Play'), true, 'desktop shows the configured Play option');
+assert.equal(desktopPreview.body.includes('Get it on Google Play'), false, 'desktop hides the unverified Play option');
 
 async function calendarResponse(query, event = publicEvent, cookie = '', host = 'www.stumblevents.com') {
   const previousFetch = globalThis.fetch;

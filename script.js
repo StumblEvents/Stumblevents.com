@@ -520,7 +520,7 @@ function handleSignup(formId, noteId) {
       if (!response.ok) throw new Error("Signup failed");
 
       note.textContent =
-        "You're on the list. We'll email you when Stumbl publicly launches.";
+        "You're on the list. We'll email you Stumbl news and availability updates.";
       form.reset();
     } catch {
       note.classList.add("is-error");

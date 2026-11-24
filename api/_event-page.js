@@ -47,7 +47,8 @@ module.exports = async function linkPreview(req, res) {
   const canonicalUrl = type === 'invite'
     ? webInviteUrl(baseUrl, token, target)
     : canonicalEventUrl(baseUrl, eventId, token, target);
-  if ((type !== 'event' && type !== 'invite') || (!eventId && type !== 'invite') || (type === 'invite' && !token)) {
+  const validEventId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventId);
+  if ((type === 'event' && !validEventId) || (type !== 'event' && type !== 'invite') || (!eventId && type !== 'invite') || (type === 'invite' && !token)) {
     return sendHtml(req, res, 404, renderEventPreview({ canonicalUrl, noindex: true, userAgent: req.headers?.['user-agent'] }));
   }
   try {

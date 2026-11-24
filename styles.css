@@ -1334,3 +1334,10 @@ footer nav {
 
   .inner-header nav a { text-underline-offset: 5px; }
 }
+
+/* Production launch downloads retain the existing landing-page palette. */
+.app-store-badge{display:inline-flex;margin-top:12px;max-width:100%;border-radius:10px}
+.app-store-badge img{display:block;width:150px;height:50px;max-width:100%}
+.app-store-badge:focus-visible{outline:3px solid #20b8a5;outline-offset:5px}
+.download-section>div,.landing-signup{min-width:0}
+@media(max-width:620px){.download-section{grid-template-columns:1fr}.hero-content .app-store-badge{margin-top:20px}}
